@@ -7,27 +7,42 @@ export function initTesseract() {
     return;
   }
 
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext('2d', {
+    alpha: false,
+    desynchronized: true
+  });
   console.log('Canvas context:', ctx);
   if (!ctx) {
     console.error('Could not get canvas context!');
     return;
   }
 
-  // Force canvas size to match window
+  // Force canvas size to match window with device pixel ratio
   function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    canvas.style.width = window.innerWidth + 'px';
-    canvas.style.height = window.innerHeight + 'px';
-    console.log(`Canvas size set to: ${canvas.width}x${canvas.height}`);
+    const dpr = window.devicePixelRatio || 1;
+    const displayWidth = window.innerWidth;
+    const displayHeight = window.innerHeight;
+
+    canvas.width = displayWidth * dpr;
+    canvas.height = displayHeight * dpr;
+    canvas.style.width = displayWidth + 'px';
+    canvas.style.height = displayHeight + 'px';
+
+    ctx.scale(dpr, dpr);
+    console.log(`Canvas size set to: ${canvas.width}x${canvas.height} (DPR: ${dpr})`);
   }
 
   // Initial size
   resizeCanvas();
 
-  // Update size on window resize
-  window.addEventListener('resize', resizeCanvas);
+  // Update size on window resize with debouncing
+  let resizeTimeout;
+  window.addEventListener('resize', () => {
+    if (resizeTimeout) {
+      clearTimeout(resizeTimeout);
+    }
+    resizeTimeout = setTimeout(resizeCanvas, 250);
+  });
 
   // Remove initial feedback grid
   ctx.fillStyle = '#ffffff';
@@ -95,6 +110,7 @@ export function initTesseract() {
 
   let time = 0;
   let frameCount = 0;
+  let animationFrameId = null;
 
   function animate() {
     frameCount++;
@@ -106,9 +122,9 @@ export function initTesseract() {
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    time += 0.005; // Slower rotation
-    pulsePhase += 0.02; // Control pulse speed
-    depthPhase += 0.01; // Control depth pulse speed
+    time += 0.005;
+    pulsePhase += 0.02;
+    depthPhase += 0.01;
     
     const angle = time * 0.5;
     const morphT = (Math.sin(time * 0.2) + 1) / 2;
@@ -166,11 +182,30 @@ export function initTesseract() {
       }
     }
 
-    requestAnimationFrame(animate);
+    // Use requestAnimationFrame with proper binding
+    animationFrameId = window.requestAnimationFrame(() => animate());
   }
 
-  console.log('Starting animation loop...');
-  animate();
+  // Start animation with proper error handling
+  try {
+    console.log('Starting animation loop...');
+    animate();
+  } catch (error) {
+    console.error('Error in animation loop:', error);
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+    }
+  }
+
+  // Add cleanup function
+  return () => {
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+    }
+    if (resizeTimeout) {
+      clearTimeout(resizeTimeout);
+    }
+  };
 }
 
 

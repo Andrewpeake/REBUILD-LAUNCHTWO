@@ -6,6 +6,7 @@ export function initIntro() {
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
     let isPressed = false;
+    let animationFrameId = null;
 
     const introOverlay = document.createElement('div');
     introOverlay.style.position = 'fixed';
@@ -18,35 +19,47 @@ export function initIntro() {
     introOverlay.style.justifyContent = 'center';
     introOverlay.style.alignItems = 'center';
     introOverlay.style.zIndex = '9999';
-    introOverlay.style.willChange = 'opacity, transform, filter';
-    introOverlay.style.pointerEvents = 'auto'; // Changed to allow interaction
+    introOverlay.style.willChange = 'opacity, transform';
+    introOverlay.style.pointerEvents = 'auto';
     introOverlay.style.perspective = '500px';
     introOverlay.style.overflow = 'hidden';
+    introOverlay.style.webkitPerspective = '500px';
+    introOverlay.style.webkitTransformStyle = 'preserve-3d';
+    introOverlay.style.transformStyle = 'preserve-3d';
 
-    // Mouse event handlers
+    // Mouse event handlers with requestAnimationFrame
     const handleMouseMove = (e) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
       if (isPressed) {
-        updateElementPositions();
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+        }
+        animationFrameId = requestAnimationFrame(updateElementPositions);
       }
     };
 
     const handleMouseDown = () => {
       isPressed = true;
       introOverlay.style.cursor = 'grabbing';
-      updateElementPositions();
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+      animationFrameId = requestAnimationFrame(updateElementPositions);
     };
 
     const handleMouseUp = () => {
       isPressed = false;
       introOverlay.style.cursor = 'grab';
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
       resetElementPositions();
     };
 
     // Add event listeners
-    introOverlay.addEventListener('mousemove', handleMouseMove);
-    introOverlay.addEventListener('mousedown', handleMouseDown);
+    introOverlay.addEventListener('mousemove', handleMouseMove, { passive: true });
+    introOverlay.addEventListener('mousedown', handleMouseDown, { passive: true });
     introOverlay.addEventListener('mouseup', handleMouseUp);
     introOverlay.addEventListener('mouseleave', handleMouseUp);
     introOverlay.style.cursor = 'grab';
@@ -345,16 +358,19 @@ export function initIntro() {
 
     // Cleanup function
     const cleanup = () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
       introOverlay.removeEventListener('mousemove', handleMouseMove);
       introOverlay.removeEventListener('mousedown', handleMouseDown);
       introOverlay.removeEventListener('mouseup', handleMouseUp);
       introOverlay.removeEventListener('mouseleave', handleMouseUp);
+      document.body.removeChild(introOverlay);
     };
 
     // Add cleanup to the final animation
     const finalAnimation = () => {
       cleanup();
-      introOverlay.remove();
       console.log('intro.js: Intro complete');
       resolve();
     };
