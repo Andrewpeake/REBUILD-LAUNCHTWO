@@ -31,8 +31,22 @@ const performanceMetrics = {
   sectionLoadTimes: {}
 };
 
+// Safari detection
+const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+const isMobile = () => window.innerWidth <= 768 || ('ontouchstart' in window);
+
 document.addEventListener('DOMContentLoaded', async () => {
   try {
+    // Add Safari class if needed
+    if (isSafari) {
+      document.documentElement.classList.add('safari');
+    }
+    
+    // Add mobile class if needed
+    if (isMobile()) {
+      document.documentElement.classList.add('mobile');
+    }
+
     // Initialize performance monitoring
     performance.mark('app-init-start');
     
@@ -45,10 +59,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       mainContainer.style.opacity = '0';
     }
 
-    // Initialize tesseract with error handling
+    // Initialize tesseract with error handling and mobile optimization
     try {
       console.log('Starting tesseract initialization...');
-      initTesseract();
+      if (!isMobile()) {
+        initTesseract();
+      } else {
+        // Simplified background for mobile
+        const canvas = document.getElementById('tesseract-bg');
+        if (canvas) {
+          canvas.style.display = 'none';
+        }
+      }
       console.log('Tesseract initialized successfully');
     } catch (error) {
       console.error('Error initializing tesseract:', error);
@@ -176,6 +198,50 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     ScrollTrigger.defaults({ markers: false });
     ScrollTrigger.refresh();
+
+    // Update focus section handling for Safari
+    const setupFocusSection = () => {
+      const focusLayers = document.querySelectorAll('.focus-layer');
+      
+      focusLayers.forEach(layer => {
+        layer.addEventListener('touchstart', function(e) {
+          if (isMobile()) {
+            e.preventDefault();
+            focusLayers.forEach(l => {
+              if (l !== layer) l.classList.remove('active');
+            });
+            layer.classList.toggle('active');
+          }
+        }, { passive: false });
+
+        // Add click handler for non-touch devices
+        layer.addEventListener('click', function(e) {
+          if (!isMobile()) {
+            focusLayers.forEach(l => {
+              if (l !== layer) l.classList.remove('active');
+            });
+            layer.classList.toggle('active');
+          }
+        });
+      });
+    };
+
+    setupFocusSection();
+
+    // Handle resize events with debouncing
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        const wasMobile = document.documentElement.classList.contains('mobile');
+        const isMobileNow = isMobile();
+        
+        if (wasMobile !== isMobileNow) {
+          document.documentElement.classList.toggle('mobile', isMobileNow);
+          setupFocusSection();
+        }
+      }, 250);
+    });
 
     // Final performance mark
     performance.mark('app-init-end');

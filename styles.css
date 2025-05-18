@@ -7,6 +7,9 @@ html, body {
   height: 100%;
   overflow-x: hidden;
   color: #000000;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 section {
@@ -405,17 +408,55 @@ section {
 .focus-layer:nth-child(2) { top: 50%; }
 .focus-layer:nth-child(3) { top: 70%; }
 
+/* === Safari-specific fixes === */
+@supports (-webkit-touch-callout: none) {
+  .focus-wrap,
+  .glass-panel,
+  .team-card,
+  .nav-container {
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+  }
+  
+  .focus-layer,
+  .bio-content {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* === Mobile Touch Optimization === */
+@media (hover: none) {
+  .focus-layer,
+  .team-card,
+  .nav-links a,
+  .bio-link {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .focus-layer:active,
+  .team-card:active,
+  .nav-links a:active,
+  .bio-link:active {
+    transform: scale(0.98);
+  }
+}
+
 /* === Focus Section Mobile === */
 @media (max-width: 768px) {
   #focus.focus-wrap {
     padding: 4rem 1rem;
     min-height: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .glass-panel {
     padding: 1.5rem;
     margin: 1rem;
     width: calc(100% - 2rem);
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
   }
 
   .focus-title {
@@ -431,6 +472,8 @@ section {
     flex-direction: column;
     gap: 8rem;
     padding: 4rem 0;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
   }
 
   .focus-layer {
@@ -438,11 +481,15 @@ section {
     top: auto !important;
     left: auto !important;
     transform: none !important;
+    -webkit-transform: none !important;
     width: 100%;
     min-width: auto;
     font-size: 2rem;
     padding: 2rem 1.5rem;
     margin-bottom: 1rem;
+    will-change: transform;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
   }
 
   .focus-layer:hover {
