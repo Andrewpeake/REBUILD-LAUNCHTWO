@@ -1,75 +1,84 @@
 export function initNavigation() {
   const nav = document.getElementById('main-nav');
-  const navToggle = document.querySelector('.nav-toggle');
-  const navLinks = document.querySelector('.nav-links');
-  const isMobile = () => window.innerWidth <= 768;
+  let lastScrollTop = 0;
+  let isHovering = false;
+  let scrollTimeout;
 
-  // Toggle mobile menu
-  if (navToggle && navLinks) {
-    navToggle.addEventListener('click', (e) => {
-      e.preventDefault();
-      navToggle.classList.toggle('active');
-      navLinks.classList.toggle('active');
-    });
+  // Create hover detection area
+  const hoverArea = document.createElement('div');
+  hoverArea.className = 'nav-hover-area';
+  document.body.appendChild(hoverArea);
+
+  // Show nav after intro
+  nav.classList.add('nav-hidden');
+  setTimeout(() => {
+    nav.classList.add('nav-visible');
+  }, 100); // Small delay after intro
+
+  // Handle scroll
+  function handleScroll() {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    
+    // Clear the timeout on new scroll
+    if (scrollTimeout) {
+      clearTimeout(scrollTimeout);
+    }
+
+    // Don't hide if hovering
+    if (isHovering) return;
+
+    // Determine scroll direction and show/hide nav
+    if (scrollTop > lastScrollTop && scrollTop > 100) {
+      // Scrolling down & not at top
+      nav.classList.add('nav-hidden');
+      nav.classList.remove('nav-visible');
+    } else {
+      // Scrolling up or at top
+      nav.classList.remove('nav-hidden');
+      nav.classList.add('nav-visible');
+    }
+
+    lastScrollTop = scrollTop;
+
+    // Set timeout to show nav after scrolling stops
+    scrollTimeout = setTimeout(() => {
+      nav.classList.remove('nav-hidden');
+      nav.classList.add('nav-visible');
+    }, 2000); // Show nav after 2 seconds of no scrolling
   }
 
-  // Handle navigation clicks
-  document.querySelectorAll('.nav-links a').forEach(link => {
-    link.addEventListener('click', (e) => {
+  // Handle hover
+  function handleHover(isEntering) {
+    isHovering = isEntering;
+    if (isEntering) {
+      nav.classList.remove('nav-hidden');
+      nav.classList.add('nav-visible');
+    } else {
+      // Only hide if we're scrolling down
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      if (scrollTop > lastScrollTop && scrollTop > 100) {
+        nav.classList.add('nav-hidden');
+        nav.classList.remove('nav-visible');
+      }
+    }
+  }
+
+  // Event listeners
+  window.addEventListener('scroll', handleScroll, { passive: true });
+  hoverArea.addEventListener('mouseenter', () => handleHover(true));
+  hoverArea.addEventListener('mouseleave', () => handleHover(false));
+  nav.addEventListener('mouseenter', () => handleHover(true));
+  nav.addEventListener('mouseleave', () => handleHover(false));
+
+  // Handle smooth scrolling for nav links
+  nav.addEventListener('click', (e) => {
+    if (e.target.tagName === 'A') {
       e.preventDefault();
-      
-      // Close mobile menu if open
-      if (isMobile()) {
-        navToggle?.classList.remove('active');
-        navLinks?.classList.remove('active');
-      }
-
-      const targetId = link.getAttribute('href').substring(1);
-      const targetElement = document.getElementById(targetId);
-      
+      const targetId = e.target.getAttribute('href');
+      const targetElement = document.querySelector(targetId);
       if (targetElement) {
-        const scrollContainer = isMobile() ? document.getElementById('main-container') : window;
-        const targetPosition = targetElement.offsetTop;
-
-        if (isMobile()) {
-          scrollContainer?.scrollTo({
-            top: targetPosition,
-            behavior: 'smooth'
-          });
-        } else {
-          window.scrollTo({
-            top: targetPosition,
-            behavior: 'smooth'
-          });
-        }
-
-        // Update URL without scrolling
-        const url = new URL(window.location);
-        url.hash = `#${targetId}`;
-        window.history.replaceState({}, '', url);
+        targetElement.scrollIntoView({ behavior: 'smooth' });
       }
-    });
-  });
-
-  // Close mobile menu when clicking outside
-  document.addEventListener('click', (e) => {
-    if (isMobile() && 
-        navLinks?.classList.contains('active') && 
-        !e.target.closest('.nav-container')) {
-      navToggle?.classList.remove('active');
-      navLinks?.classList.remove('active');
     }
   });
-
-  // Handle resize
-  let resizeTimer;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
-      if (!isMobile()) {
-        navToggle?.classList.remove('active');
-        navLinks?.classList.remove('active');
-      }
-    }, 250);
-  }, { passive: true });
 } 

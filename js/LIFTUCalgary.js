@@ -33,13 +33,13 @@ const performanceMetrics = {
 
 // Safari detection
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-
-// Mobile detection with additional checks
 const isMobile = () => {
   return (
     window.innerWidth <= 768 ||
-    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-    (navigator.maxTouchPoints && navigator.maxTouchPoints > 2)
+    navigator.maxTouchPoints > 0 ||
+    navigator.msMaxTouchPoints > 0 ||
+    ('ontouchstart' in window) ||
+    (window.DocumentTouch && document instanceof DocumentTouch)
   );
 };
 
@@ -51,40 +51,34 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
     // Add mobile class if needed
-    const mobile = isMobile();
-    if (mobile) {
+    if (isMobile()) {
       document.documentElement.classList.add('mobile');
       document.body.classList.add('mobile');
-      
-      // Disable canvas for better mobile performance
-      const canvas = document.getElementById('tesseract-bg');
-      if (canvas) {
-        canvas.style.display = 'none';
-      }
     }
 
     // Initialize performance monitoring
     performance.mark('app-init-start');
     
+    // Start preloading sections immediately
+    sectionIds.forEach(preloadSection);
+    
     // Show loading state
     const mainContainer = document.getElementById('main-container');
     if (mainContainer) {
-      mainContainer.style.display = 'block';
       mainContainer.style.opacity = '0';
     }
 
-    // Start preloading sections immediately
-    console.log('Starting section preload...');
-    sectionIds.forEach(id => {
-      console.log(`Preloading section: ${id}`);
-      preloadSection(id);
-    });
-    
-    // Initialize tesseract only for non-mobile
+    // Initialize tesseract with error handling and mobile optimization
     try {
       console.log('Starting tesseract initialization...');
-      if (!mobile) {
+      if (!isMobile()) {
         initTesseract();
+      } else {
+        // Simplified background for mobile
+        const canvas = document.getElementById('tesseract-bg');
+        if (canvas) {
+          canvas.style.display = 'none';
+        }
       }
       console.log('Tesseract initialized successfully');
     } catch (error) {
@@ -106,9 +100,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         // Load sections with loading state
         appState.setLoading(true);
-        console.log('Loading sections...');
         const loadedSections = await loadSections(sectionIds);
-        console.log('Sections loaded:', loadedSections);
         appState.setLoading(false);
         
         performance.mark('sections-load-end');
@@ -120,14 +112,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Show main container with animation
         if (mainContainer) {
+          mainContainer.style.display = 'block';
           gsap.to(mainContainer, {
             opacity: 1,
             duration: 1,
-            ease: 'power2.out',
-            onComplete: () => {
-              console.log('Main container animation complete');
-              document.body.classList.add('site-loaded');
-            }
+            ease: 'power2.out'
           });
         }
 
@@ -225,7 +214,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       
       focusLayers.forEach(layer => {
         layer.addEventListener('touchstart', function(e) {
-          if (mobile) {
+          if (isMobile()) {
             e.preventDefault();
             focusLayers.forEach(l => {
               if (l !== layer) l.classList.remove('active');
@@ -236,7 +225,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Add click handler for non-touch devices
         layer.addEventListener('click', function(e) {
-          if (!mobile) {
+          if (!isMobile()) {
             focusLayers.forEach(l => {
               if (l !== layer) l.classList.remove('active');
             });
@@ -259,14 +248,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (wasMobile !== isMobileNow) {
           document.documentElement.classList.toggle('mobile', isMobileNow);
           document.body.classList.toggle('mobile', isMobileNow);
-          
-          // Toggle canvas visibility
-          const canvas = document.getElementById('tesseract-bg');
-          if (canvas) {
-            canvas.style.display = isMobileNow ? 'none' : 'block';
-          }
-          
-          // Reinitialize touch handlers if needed
           setupFocusSection();
         }
       }, 250);
@@ -290,7 +271,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       <div class="error-message">
         <h2>Something went wrong</h2>
         <p>We're having trouble loading the site. Please try refreshing the page.</p>
-        <p class="error-details">${error.message}</p>
         <button onclick="window.location.reload()">Refresh Page</button>
       </div>
     `;
