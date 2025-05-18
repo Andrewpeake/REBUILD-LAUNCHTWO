@@ -33,7 +33,15 @@ const performanceMetrics = {
 
 // Safari detection
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-const isMobile = () => window.innerWidth <= 768 || ('ontouchstart' in window);
+const isMobile = () => {
+  return (
+    window.innerWidth <= 768 ||
+    navigator.maxTouchPoints > 0 ||
+    navigator.msMaxTouchPoints > 0 ||
+    ('ontouchstart' in window) ||
+    (window.DocumentTouch && document instanceof DocumentTouch)
+  );
+};
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
@@ -45,6 +53,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Add mobile class if needed
     if (isMobile()) {
       document.documentElement.classList.add('mobile');
+      document.body.classList.add('mobile');
     }
 
     // Initialize performance monitoring
@@ -228,7 +237,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     setupFocusSection();
 
-    // Handle resize events with debouncing
+    // Update mobile status on resize with debouncing
     let resizeTimer;
     window.addEventListener('resize', () => {
       clearTimeout(resizeTimer);
@@ -238,10 +247,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         if (wasMobile !== isMobileNow) {
           document.documentElement.classList.toggle('mobile', isMobileNow);
+          document.body.classList.toggle('mobile', isMobileNow);
           setupFocusSection();
         }
       }, 250);
-    });
+    }, { passive: true });
 
     // Final performance mark
     performance.mark('app-init-end');

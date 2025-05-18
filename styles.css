@@ -433,6 +433,7 @@ section {
   .bio-link {
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
 
   .focus-layer:active,
@@ -449,6 +450,7 @@ section {
     padding: 4rem 1rem;
     min-height: auto;
     -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
   }
 
   .glass-panel {
@@ -457,6 +459,7 @@ section {
     width: calc(100% - 2rem);
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
+    touch-action: manipulation;
   }
 
   .focus-title {
@@ -490,6 +493,8 @@ section {
     will-change: transform;
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .focus-layer:hover {
@@ -508,6 +513,7 @@ section {
     max-height: 0;
     overflow: hidden;
     transition: all 0.4s ease;
+    touch-action: manipulation;
   }
 
   .focus-layer.active .focus-reveal {
@@ -1663,6 +1669,100 @@ body.site-loaded #site-footer {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
+  }
+}
+
+/* === Mobile Base Styles === */
+html.mobile,
+body.mobile {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: none;
+  touch-action: manipulation;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  overflow: hidden;
+}
+
+body.mobile #main-container {
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+/* === Mobile Touch Optimization === */
+@media (hover: none) {
+  .focus-layer,
+  .team-card,
+  .nav-links a,
+  .bio-link {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  .focus-layer:active,
+  .team-card:active,
+  .nav-links a:active,
+  .bio-link:active {
+    transform: scale(0.98);
+  }
+}
+
+/* === Focus Section Mobile === */
+@media (max-width: 768px) {
+  #focus.focus-wrap {
+    padding: 4rem 1rem;
+    min-height: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+  }
+
+  .glass-panel {
+    padding: 1.5rem;
+    margin: 1rem;
+    width: calc(100% - 2rem);
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    touch-action: manipulation;
+  }
+
+  .focus-layer {
+    position: relative;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+    -webkit-transform: none !important;
+    width: 100%;
+    min-width: auto;
+    font-size: 2rem;
+    padding: 2rem 1.5rem;
+    margin-bottom: 1rem;
+    will-change: transform;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .focus-reveal {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    transform: none !important;
+    width: 100%;
+    margin: 1rem 0;
+    opacity: 0;
+    visibility: hidden;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    touch-action: manipulation;
   }
 }
 
