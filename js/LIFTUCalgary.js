@@ -66,15 +66,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Initialize performance monitoring
     performance.mark('app-init-start');
     
-    // Start preloading sections immediately
-    sectionIds.forEach(preloadSection);
-    
     // Show loading state
     const mainContainer = document.getElementById('main-container');
     if (mainContainer) {
+      mainContainer.style.display = 'block';
       mainContainer.style.opacity = '0';
     }
 
+    // Start preloading sections immediately
+    console.log('Starting section preload...');
+    sectionIds.forEach(id => {
+      console.log(`Preloading section: ${id}`);
+      preloadSection(id);
+    });
+    
     // Initialize tesseract only for non-mobile
     try {
       console.log('Starting tesseract initialization...');
@@ -101,7 +106,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         // Load sections with loading state
         appState.setLoading(true);
+        console.log('Loading sections...');
         const loadedSections = await loadSections(sectionIds);
+        console.log('Sections loaded:', loadedSections);
         appState.setLoading(false);
         
         performance.mark('sections-load-end');
@@ -113,11 +120,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Show main container with animation
         if (mainContainer) {
-          mainContainer.style.display = 'block';
           gsap.to(mainContainer, {
             opacity: 1,
             duration: 1,
-            ease: 'power2.out'
+            ease: 'power2.out',
+            onComplete: () => {
+              console.log('Main container animation complete');
+              document.body.classList.add('site-loaded');
+            }
           });
         }
 
@@ -280,6 +290,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       <div class="error-message">
         <h2>Something went wrong</h2>
         <p>We're having trouble loading the site. Please try refreshing the page.</p>
+        <p class="error-details">${error.message}</p>
         <button onclick="window.location.reload()">Refresh Page</button>
       </div>
     `;
