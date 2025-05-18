@@ -41,8 +41,21 @@ async function fetchSection(id) {
 export function preloadSection(id) {
   if (!sectionCache.has(id)) {
     preloadQueue.add(id);
-    // Start preloading in the background
-    requestIdleCallback(() => preloadSections());
+    // Start preloading in the background with fallback for Safari
+    const requestIdleCallbackFallback = window.requestIdleCallback || 
+      function(cb) {
+        const start = Date.now();
+        return setTimeout(function() {
+          cb({
+            didTimeout: false,
+            timeRemaining: function() {
+              return Math.max(0, 50 - (Date.now() - start));
+            }
+          });
+        }, 1);
+      };
+    
+    requestIdleCallbackFallback(() => preloadSections());
   }
 }
 
