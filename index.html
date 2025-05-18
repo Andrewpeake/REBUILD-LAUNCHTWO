@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, minimum-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -19,39 +19,40 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 </head>
 <body>
-  <!-- Background Tesseract Canvas -->
-  <canvas id="tesseract-bg"></canvas>
+  <div id="mobile-container">
+    <!-- Background Tesseract Canvas -->
+    <canvas id="tesseract-bg"></canvas>
 
-  <nav id="main-nav" class="nav-hidden">
-    <div class="nav-container">
-      <div class="nav-header">
-        <a href="#home" class="nav-logo">UAM UCalgary</a>
-        <button class="nav-toggle" aria-label="Toggle navigation menu">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-      </div>
-      <div class="nav-links">
-        <a href="#whatisaam">What is AAM</a>
-        <a href="#about">About</a>
-        <a href="#focus">Focus</a>
-        <a href="#team">Team</a>
-        <a href="#join" class="nav-cta">Join Us</a>
-      </div>
-    </div>
-  </nav>
+    <!-- Main Site Content -->
+    <main id="main-container" style="display: none;">
+      <nav id="main-nav" class="nav-hidden">
+        <div class="nav-container">
+          <div class="nav-header">
+            <a href="#home" class="nav-logo">UAM UCalgary</a>
+            <button class="nav-toggle" aria-label="Toggle navigation menu">
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+          </div>
+          <div class="nav-links">
+            <a href="#whatisaam">What is AAM</a>
+            <a href="#about">About</a>
+            <a href="#focus">Focus</a>
+            <a href="#team">Team</a>
+            <a href="#join" class="nav-cta">Join Us</a>
+          </div>
+        </div>
+      </nav>
+      <section id="home" class="scroll-section home-header">
+        <h1 class="home-logo-title">UAMUCalgary</h1>
+      </section>
+    </main>
 
-  <!-- Main Site Content -->
-  <main id="main-container" style="display: none;">
-    <section id="home" class="scroll-section home-header">
-      <h1 class="home-logo-title">UAMUCalgary</h1>
-    </section>
-  </main>
-
-  <footer id="site-footer" style="display: none;">
-    <p>&copy; 2025 Urban Air Mobility UCalgary. All rights reserved.</p>
-  </footer>
+    <footer id="site-footer" style="display: none;">
+      <p>&copy; 2025 Urban Air Mobility UCalgary. All rights reserved.</p>
+    </footer>
+  </div>
 
   <!-- Main Module Entry -->
   <script type="module" src="js/LIFTUCalgary.js"></script>

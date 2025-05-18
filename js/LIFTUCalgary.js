@@ -33,13 +33,13 @@ const performanceMetrics = {
 
 // Safari detection
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+// Mobile detection with additional checks
 const isMobile = () => {
   return (
     window.innerWidth <= 768 ||
-    navigator.maxTouchPoints > 0 ||
-    navigator.msMaxTouchPoints > 0 ||
-    ('ontouchstart' in window) ||
-    (window.DocumentTouch && document instanceof DocumentTouch)
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+    (navigator.maxTouchPoints && navigator.maxTouchPoints > 2)
   );
 };
 
@@ -51,9 +51,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
     // Add mobile class if needed
-    if (isMobile()) {
+    const mobile = isMobile();
+    if (mobile) {
       document.documentElement.classList.add('mobile');
       document.body.classList.add('mobile');
+      
+      // Disable canvas for better mobile performance
+      const canvas = document.getElementById('tesseract-bg');
+      if (canvas) {
+        canvas.style.display = 'none';
+      }
     }
 
     // Initialize performance monitoring
@@ -68,17 +75,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       mainContainer.style.opacity = '0';
     }
 
-    // Initialize tesseract with error handling and mobile optimization
+    // Initialize tesseract only for non-mobile
     try {
       console.log('Starting tesseract initialization...');
-      if (!isMobile()) {
+      if (!mobile) {
         initTesseract();
-      } else {
-        // Simplified background for mobile
-        const canvas = document.getElementById('tesseract-bg');
-        if (canvas) {
-          canvas.style.display = 'none';
-        }
       }
       console.log('Tesseract initialized successfully');
     } catch (error) {
@@ -214,7 +215,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       
       focusLayers.forEach(layer => {
         layer.addEventListener('touchstart', function(e) {
-          if (isMobile()) {
+          if (mobile) {
             e.preventDefault();
             focusLayers.forEach(l => {
               if (l !== layer) l.classList.remove('active');
@@ -225,7 +226,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Add click handler for non-touch devices
         layer.addEventListener('click', function(e) {
-          if (!isMobile()) {
+          if (!mobile) {
             focusLayers.forEach(l => {
               if (l !== layer) l.classList.remove('active');
             });
@@ -248,6 +249,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (wasMobile !== isMobileNow) {
           document.documentElement.classList.toggle('mobile', isMobileNow);
           document.body.classList.toggle('mobile', isMobileNow);
+          
+          // Toggle canvas visibility
+          const canvas = document.getElementById('tesseract-bg');
+          if (canvas) {
+            canvas.style.display = isMobileNow ? 'none' : 'block';
+          }
+          
+          // Reinitialize touch handlers if needed
           setupFocusSection();
         }
       }, 250);
