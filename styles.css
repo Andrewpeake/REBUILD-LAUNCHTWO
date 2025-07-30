@@ -90,25 +90,29 @@ section {
   height: 100vh;
   position: relative;
   background: rgba(255, 255, 255, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  z-index: 10;
 }
 
 .hero-title-topleft {
-  position: absolute;
-  top: 10%;
-  left: 0;
+  position: relative;
   padding-left: 6rem;
   max-width: none;
   animation: fadeInUp 1.4s ease-out both;
   text-align: left;
+  z-index: 15;
 }
 
 .hero-title {
-  font-size: 7rem;
+  font-size: 8rem;
   font-weight: 700;
   line-height: 1;
   color: #000;
   margin: 0;
   text-shadow: none;
+  margin-bottom: 1rem;
 }
 
 .hero-sub {
