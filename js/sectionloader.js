@@ -101,6 +101,7 @@ export async function loadSections(sectionIds) {
       const section = tempContainer.firstElementChild;
       
       if (section) {
+        console.log(`Adding section ${id} to DOM`);
         section.classList.add('section-enter');
         container.appendChild(section);
 
@@ -111,6 +112,8 @@ export async function loadSections(sectionIds) {
             section.classList.remove('section-enter', 'section-enter-active');
           }, { once: true });
         });
+      } else {
+        console.error(`No section element found in HTML for ${id}`);
       }
 
       loaded.push(id);

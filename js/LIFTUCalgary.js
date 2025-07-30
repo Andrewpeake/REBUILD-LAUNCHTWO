@@ -65,6 +65,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Show loading state
     const mainContainer = document.getElementById('main-container');
     if (mainContainer) {
+      mainContainer.style.display = 'block';
       mainContainer.style.opacity = '0';
     }
 
@@ -82,7 +83,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Initialize navigation after intro
     if (!skipIntro) {
-      await initIntro();
+      console.log('Skipping intro for debugging');
+      // await initIntro(); // Temporarily disabled for debugging
     }
     initNavigation();
 
@@ -104,6 +106,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Show main container with animation
         if (mainContainer) {
+          console.log('Showing main container');
           mainContainer.style.display = 'block';
           mainContainer.style.opacity = '1';
           gsap.to(mainContainer, {
@@ -111,6 +114,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             duration: 1,
             ease: 'power2.out'
           });
+        } else {
+          console.error('Main container not found!');
         }
 
         // Show footer
@@ -142,6 +147,14 @@ document.addEventListener('DOMContentLoaded', async () => {
           loadTime: performance.now() - performanceMetrics.startTime
         });
 
+        // Debug: Check what sections are actually in the DOM
+        console.log('=== DEBUG: Checking sections in DOM ===');
+        sectionIds.forEach(id => {
+          const section = document.getElementById(id);
+          console.log(`Section ${id}:`, section ? 'EXISTS' : 'MISSING');
+        });
+        console.log('=== END DEBUG ===');
+
       } catch (error) {
         console.error('Error showing site:', error);
         appState.addError({
@@ -151,13 +164,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     };
 
-    if (skipIntro === 'true') {
-      sessionStorage.removeItem('skipIntro');
-      sessionStorage.removeItem('scrollTo');
-      await showSite();
-    } else {
-      await showSite();
-    }
+    console.log('About to show site...');
+    await showSite();
+    console.log('Site show complete');
 
     // Initialize AAM interaction with error handling
     try {
