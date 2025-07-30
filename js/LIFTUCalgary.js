@@ -83,8 +83,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Initialize navigation after intro
     if (!skipIntro) {
-      console.log('Skipping intro for debugging');
-      // await initIntro(); // Temporarily disabled for debugging
+      await initIntro();
     }
     initNavigation();
 

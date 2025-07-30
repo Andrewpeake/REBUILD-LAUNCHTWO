@@ -105,12 +105,15 @@ export async function loadSections(sectionIds) {
         section.classList.add('section-enter');
         container.appendChild(section);
 
-        // Trigger enter animation
+        // Trigger enter animation immediately
         requestAnimationFrame(() => {
           section.classList.add('section-enter-active');
-          section.addEventListener('transitionend', () => {
+          // Force visibility after a short delay
+          setTimeout(() => {
+            section.style.opacity = '1';
+            section.style.transform = 'translateY(0)';
             section.classList.remove('section-enter', 'section-enter-active');
-          }, { once: true });
+          }, 100);
         });
       } else {
         console.error(`No section element found in HTML for ${id}`);

@@ -29,13 +29,13 @@ section {
 }
 
 #team {
-  padding-top: 40rem;
-  margin-top: 40rem;
+  padding-top: 4rem;
+  margin-top: 4rem;
 }
 
 #join {
-  padding-top: 40rem;
-  margin-top: 40rem;
+  padding-top: 4rem;
+  margin-top: 4rem;
 }
 
 #focus h2,
@@ -1469,13 +1469,13 @@ body.site-loaded #site-footer {
   }
 
   #team {
-    padding-top: 10rem;
-    margin-top: 10rem;
+    padding-top: 2rem;
+    margin-top: 2rem;
   }
 
   #join {
-    padding-top: 10rem;
-    margin-top: 10rem;
+    padding-top: 2rem;
+    margin-top: 2rem;
   }
 
   /* Improve mobile spacing */
