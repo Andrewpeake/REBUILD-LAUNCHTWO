@@ -527,6 +527,26 @@ section {
     font-size: 1rem;
     padding: 0.5rem;
   }
+
+  /* Mobile focus layer improvements */
+  .focus-layer {
+    cursor: pointer;
+    position: relative;
+  }
+
+  .focus-layer::after {
+    content: 'Tap to expand';
+    position: absolute;
+    bottom: 0.5rem;
+    right: 1rem;
+    font-size: 0.75rem;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  .focus-layer.active::after {
+    content: 'Tap to collapse';
+  }
 }
 
 @media (max-width: 480px) {
@@ -1368,40 +1388,64 @@ body.site-loaded #site-footer {
 
 @media (max-width: 768px) {
   .nav-links {
-    display: none;
-    position: absolute;
-    top: 100%;
+    position: fixed;
+    top: 0;
     left: 0;
     width: 100%;
-    background: rgba(255, 255, 255, 0.95);
-    padding: 1rem;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex;
     flex-direction: column;
-    gap: 1rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 999;
+    padding: 2rem;
   }
 
   .nav-links.active {
-    display: flex;
+    transform: translateX(0);
   }
 
   .nav-container {
-    padding: 0.75rem 1rem;
-    justify-content: space-between;
+    padding: 1rem;
+    width: 100%;
+    max-width: 100%;
   }
 
   .nav-toggle {
     display: block;
+    z-index: 1000;
   }
 
   .nav-links a {
-    padding: 0.5rem 0;
+    font-size: 1.5rem;
+    font-weight: 600;
     width: 100%;
     text-align: center;
+    padding: 1rem;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+  }
+
+  .nav-links a:hover {
+    background-color: rgba(176, 196, 222, 0.1);
   }
 
   .nav-links .nav-cta {
-    width: auto;
-    margin: 0.5rem auto;
+    margin-top: 1rem;
+    background: #b0c4de;
+    color: #000;
+    border-radius: 8px;
+    padding: 1rem 2rem;
+  }
+
+  .nav-links .nav-cta:hover {
+    background: #9bb3d1;
   }
 }
 
@@ -1417,16 +1461,35 @@ body.site-loaded #site-footer {
 
   #focus {
     padding-bottom: 2rem;
+    min-height: auto;
   }
 
   #team {
-    padding-top: 20rem;
-    margin-top: 20rem;
+    padding-top: 10rem;
+    margin-top: 10rem;
   }
 
   #join {
-    padding-top: 20rem;
-    margin-top: 20rem;
+    padding-top: 10rem;
+    margin-top: 10rem;
+  }
+
+  /* Improve mobile spacing */
+  .aam-split {
+    padding: 2rem 1rem;
+  }
+
+  .team-cards {
+    gap: 1.5rem;
+  }
+
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .contact-block {
+    padding: 1.5rem;
   }
 }
 
@@ -1626,51 +1689,7 @@ body.site-loaded #site-footer {
   transform: translateY(-11px) rotate(-45deg);
 }
 
-@media (max-width: 768px) {
-  .nav-toggle {
-    display: block;
-  }
-
-  .nav-container {
-    padding: 1rem;
-  }
-
-  .nav-links {
-    display: none;
-    width: 100%;
-    padding: 1rem;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    position: absolute;
-    top: 100%;
-    left: 0;
-    flex-direction: column;
-    gap: 1rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-
-  .nav-links.active {
-    display: flex;
-  }
-
-  .nav-links a {
-    width: 100%;
-    text-align: center;
-    padding: 0.75rem;
-  }
-
-  .nav-links .nav-cta {
-    width: 100%;
-    margin: 0.5rem 0;
-  }
-
-  #main-nav {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-  }
-}
+/* Mobile navigation styles are handled in the earlier media query */
 
 /* === Mobile Base Styles === */
 html.mobile,
@@ -1695,22 +1714,84 @@ body.mobile #main-container {
   bottom: 0;
 }
 
+/* Additional mobile optimizations */
+@media (max-width: 768px) {
+  /* Prevent horizontal scroll */
+  body {
+    overflow-x: hidden;
+  }
+  
+  /* Improve text readability */
+  p, li {
+    line-height: 1.6;
+  }
+  
+  /* Better button sizing */
+  .cta-button {
+    min-height: 44px;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+  }
+  
+  /* Improve form inputs */
+  input, textarea {
+    font-size: 16px; /* Prevents zoom on iOS */
+    min-height: 44px;
+  }
+  
+  /* Better spacing for mobile */
+  .aam-item {
+    margin-bottom: 1rem;
+  }
+  
+  /* Improve team card touch targets */
+  .team-card {
+    min-height: 300px;
+  }
+}
+
 /* === Mobile Touch Optimization === */
 @media (hover: none) {
   .focus-layer,
   .team-card,
   .nav-links a,
-  .bio-link {
+  .bio-link,
+  .team-card-link,
+  .aam-item {
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
+    user-select: none;
   }
 
   .focus-layer:active,
   .team-card:active,
   .nav-links a:active,
-  .bio-link:active {
+  .bio-link:active,
+  .team-card-link:active,
+  .aam-item:active {
     transform: scale(0.98);
+  }
+
+  /* Improve touch targets */
+  .nav-toggle {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .nav-links a {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .team-card-link {
+    min-height: 200px;
+  }
+
+  .focus-layer {
+    min-height: 60px;
   }
 }
 
