@@ -12,9 +12,24 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+html {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+body {
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+}
+
 section {
   padding: 4rem;
   text-align: center;
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
 }
 
 /* === Section Spacing === */
@@ -62,6 +77,9 @@ section {
   position: relative;
   z-index: 1;
   background: transparent;
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
 }
 
 /* === Intro Overlay === */
@@ -391,10 +409,12 @@ section {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
   border-radius: 1rem;
   border: 1px solid rgba(0, 0, 0, 0.05);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  max-height: 0;
+  overflow: hidden;
 }
 
 .focus-layer:hover .focus-reveal {
@@ -402,6 +422,7 @@ section {
   visibility: visible;
   pointer-events: auto;
   transform: translateX(-50%) translateY(0);
+  max-height: 300px;
 }
 
 .focus-reveal p {
@@ -515,13 +536,14 @@ section {
     bottom: auto;
     transform: none !important;
     width: 100%;
-    margin: 1rem 0;
-  opacity: 0;
+    margin: 0;
+    opacity: 0;
     visibility: hidden;
     max-height: 0;
     overflow: hidden;
-    transition: all 0.4s ease;
+    transition: opacity 0.3s ease, visibility 0.3s ease, max-height 0.3s ease;
     touch-action: manipulation;
+    padding: 0;
   }
 
   .focus-layer.active .focus-reveal {
@@ -529,6 +551,7 @@ section {
     visibility: visible;
     max-height: 500px;
     margin-top: 1rem;
+    padding: 1rem;
   }
 
   .focus-reveal p {
