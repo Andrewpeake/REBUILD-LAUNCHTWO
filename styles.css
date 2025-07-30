@@ -283,11 +283,15 @@ section {
   line-height: 1.6;
   margin-top: 0.75rem;
   text-align: right;
+  padding: 0;
+  margin-bottom: 0;
 }
 
 .aam-item.active + .aam-details {
   max-height: 300px;
   opacity: 1;
+  padding: 0.5rem 0;
+  margin-bottom: 1rem;
 }
 
 /* === Focus Section + Glass Panel === */
@@ -1548,6 +1552,7 @@ body.site-loaded #site-footer {
   .aam-details {
     text-align: center;
     padding: 0 1rem;
+    margin-bottom: 1rem;
   }
 }
 

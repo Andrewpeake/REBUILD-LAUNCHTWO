@@ -55,20 +55,7 @@
 
   <!-- Main Module Entry -->
   <script type="module" src="js/LIFTUCalgary.js"></script>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    // AAM items click handler
-    const items = document.querySelectorAll('.aam-item');
-    items.forEach(item => {
-      item.addEventListener('click', () => {
-        items.forEach(i => {
-          if (i !== item) i.classList.remove('active');
-        });
-        item.classList.toggle('active');
-      });
-    });
-  });
-</script>
+
 
 </body>
 </html>

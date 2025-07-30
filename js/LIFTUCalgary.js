@@ -167,44 +167,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await showSite();
     console.log('Site show complete');
 
-    // Initialize AAM interaction with error handling
-    try {
-      const items = document.querySelectorAll('.aam-item');
-      items.forEach(item => {
-        item.addEventListener('click', () => {
-          const details = item.nextElementSibling;
 
-          // Track interaction
-          appState.trackInteraction('aam_item_click', {
-            itemId: item.id || 'unknown'
-          });
-
-          document.querySelectorAll('.aam-details').forEach(detail => {
-            detail.style.maxHeight = '0px';
-            detail.style.opacity = '0';
-            detail.style.transition = 'max-height 0.5s ease, opacity 0.4s ease';
-          });
-
-          items.forEach(i => i.classList.remove('active'));
-
-          if (!item.classList.contains('active')) {
-            item.classList.add('active');
-            details.style.maxHeight = details.scrollHeight + 'px';
-            details.style.opacity = '1';
-          } else {
-            item.classList.remove('active');
-            details.style.maxHeight = '0px';
-            details.style.opacity = '0';
-          }
-        });
-      });
-    } catch (error) {
-      console.error('Error setting up AAM interactions:', error);
-      appState.addError({
-        type: 'aam_setup_error',
-        error: error.message
-      });
-    }
 
     ScrollTrigger.defaults({ markers: false });
     ScrollTrigger.refresh();
