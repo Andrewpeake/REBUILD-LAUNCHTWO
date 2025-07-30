@@ -68,18 +68,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       mainContainer.style.opacity = '0';
     }
 
-    // Initialize tesseract with error handling and mobile optimization
+    // Initialize tesseract with error handling
     try {
       console.log('Starting tesseract initialization...');
-      if (!isMobile()) {
-        initTesseract();
-      } else {
-        // Simplified background for mobile
-        const canvas = document.getElementById('tesseract-bg');
-        if (canvas) {
-          canvas.style.display = 'none';
-        }
-      }
+      initTesseract();
       console.log('Tesseract initialized successfully');
     } catch (error) {
       console.error('Error initializing tesseract:', error);
@@ -113,6 +105,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Show main container with animation
         if (mainContainer) {
           mainContainer.style.display = 'block';
+          mainContainer.style.opacity = '1';
           gsap.to(mainContainer, {
             opacity: 1,
             duration: 1,
