@@ -67,60 +67,6 @@
         item.classList.toggle('active');
       });
     });
-
-    // Mobile menu toggle
-    const navToggle = document.querySelector('.nav-toggle');
-    const navLinks = document.querySelector('.nav-links');
-    
-    navToggle.addEventListener('click', () => {
-      navToggle.classList.toggle('active');
-      navLinks.classList.toggle('active');
-    });
-
-    // Close mobile menu when clicking a link
-    const navLinksArray = document.querySelectorAll('.nav-links a');
-    navLinksArray.forEach(link => {
-      link.addEventListener('click', () => {
-        navToggle.classList.remove('active');
-        navLinks.classList.remove('active');
-      });
-    });
-
-    // Close mobile menu when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!e.target.closest('.nav-container')) {
-        navToggle.classList.remove('active');
-        navLinks.classList.remove('active');
-      }
-    });
-
-    // Focus section mobile interaction
-    const focusLayers = document.querySelectorAll('.focus-layer');
-    const isMobile = () => window.innerWidth <= 768;
-
-    focusLayers.forEach(layer => {
-      layer.addEventListener('click', () => {
-        if (isMobile()) {
-          // Close other layers
-          focusLayers.forEach(l => {
-            if (l !== layer) l.classList.remove('active');
-          });
-          // Toggle current layer
-          layer.classList.toggle('active');
-        }
-      });
-    });
-
-    // Handle resize events
-    let resizeTimer;
-    window.addEventListener('resize', () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        if (!isMobile()) {
-          focusLayers.forEach(layer => layer.classList.remove('active'));
-        }
-      }, 250);
-    });
   });
 </script>
 

@@ -1405,10 +1405,14 @@ body.site-loaded #site-footer {
     transition: transform 0.3s ease;
     z-index: 999;
     padding: 2rem;
+    visibility: hidden;
+    opacity: 0;
   }
 
   .nav-links.active {
     transform: translateX(0);
+    visibility: visible;
+    opacity: 1;
   }
 
   .nav-container {
@@ -1748,6 +1752,60 @@ body.mobile #main-container {
   .team-card {
     min-height: 300px;
   }
+
+  /* Ensure navigation is always accessible */
+  #main-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  /* Improve mobile navigation visibility */
+  .nav-container {
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Better mobile menu button */
+  .nav-toggle {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .nav-toggle span {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background: #000;
+    transition: all 0.3s ease;
+  }
+
+  /* Mobile menu button animation */
+  .nav-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+  }
+
+  .nav-toggle.active span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .nav-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -6px);
+  }
 }
 
 /* === Mobile Touch Optimization === */
@@ -1777,6 +1835,7 @@ body.mobile #main-container {
   .nav-toggle {
     min-width: 44px;
     min-height: 44px;
+    z-index: 1000;
   }
 
   .nav-links a {
@@ -1784,6 +1843,13 @@ body.mobile #main-container {
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 1rem;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+  }
+
+  .nav-links a:active {
+    background-color: rgba(176, 196, 222, 0.2);
   }
 
   .team-card-link {
@@ -1792,6 +1858,25 @@ body.mobile #main-container {
 
   .focus-layer {
     min-height: 60px;
+    cursor: pointer;
+  }
+
+  /* Prevent text selection on mobile */
+  * {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  /* Allow text selection in specific areas */
+  p, h1, h2, h3, h4, h5, h6, span, div {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
   }
 }
 

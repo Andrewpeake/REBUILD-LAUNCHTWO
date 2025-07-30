@@ -135,4 +135,45 @@ export function initNavigation() {
       }
     });
   }
+
+  // Handle focus section mobile interactions
+  const focusLayers = document.querySelectorAll('.focus-layer');
+  
+  focusLayers.forEach(layer => {
+    // Touch events for mobile
+    layer.addEventListener('touchstart', (e) => {
+      if (isMobile()) {
+        e.preventDefault();
+        // Close other layers
+        focusLayers.forEach(l => {
+          if (l !== layer) l.classList.remove('active');
+        });
+        // Toggle current layer
+        layer.classList.toggle('active');
+      }
+    }, { passive: false });
+
+    // Click events for desktop
+    layer.addEventListener('click', (e) => {
+      if (!isMobile()) {
+        // Close other layers
+        focusLayers.forEach(l => {
+          if (l !== layer) l.classList.remove('active');
+        });
+        // Toggle current layer
+        layer.classList.toggle('active');
+      }
+    });
+  });
+
+  // Handle resize events for focus layers
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      if (!isMobile()) {
+        focusLayers.forEach(layer => layer.classList.remove('active'));
+      }
+    }, 250);
+  }, { passive: true });
 } 
