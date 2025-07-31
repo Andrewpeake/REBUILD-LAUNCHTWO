@@ -393,6 +393,7 @@ section {
   min-width: 320px;
   text-align: center;
   color: #000;
+  user-select: none;
 }
 
 .focus-layer:hover {
@@ -416,7 +417,7 @@ section {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease, max-height 0.3s ease;
   border-radius: 1rem;
   border: 1px solid rgba(0, 0, 0, 0.05);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
@@ -424,7 +425,8 @@ section {
   overflow: hidden;
 }
 
-.focus-layer:hover .focus-reveal {
+.focus-layer:hover .focus-reveal,
+.focus-layer.active .focus-reveal {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
@@ -1458,6 +1460,7 @@ body.site-loaded #site-footer {
     transform: translateX(0);
     visibility: visible;
     opacity: 1;
+    pointer-events: auto;
   }
 
   .nav-container {
@@ -1471,6 +1474,8 @@ body.site-loaded #site-footer {
   .nav-toggle {
     display: block;
     z-index: 1000;
+    position: relative;
+    cursor: pointer;
   }
 
   .nav-links a {
