@@ -1606,9 +1606,15 @@ body {
 
 /* === Hero Section Mobile === */
 @media (max-width: 768px) {
+  .hero-section {
+    padding-top: 80px; /* Add space for fixed navigation */
+    min-height: calc(100vh - 80px);
+  }
+  
   .hero-content {
     gap: 1.5rem;
     padding: 1rem;
+    margin-top: 2rem;
   }
   
   .hero-logo-img {
@@ -1622,6 +1628,7 @@ body {
 
   .hero-title {
     font-size: 3rem;
+    line-height: 1.1;
   }
 
   .hero-sub {
@@ -1880,6 +1887,8 @@ body.mobile #main-container {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    height: 70px;
+    padding: 0.5rem 0;
   }
 
   /* Improve mobile navigation visibility */
