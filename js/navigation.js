@@ -117,9 +117,27 @@ export function initNavigation() {
   if (navToggle && navLinks) {
     navToggle.addEventListener('click', (e) => {
       e.stopPropagation();
+      e.preventDefault();
       console.log('Navigation: Mobile menu toggle clicked');
-      navToggle.classList.toggle('active');
-      navLinks.classList.toggle('active');
+      
+      // Force the toggle
+      const isActive = navToggle.classList.contains('active');
+      if (isActive) {
+        navToggle.classList.remove('active');
+        navLinks.classList.remove('active');
+        navLinks.style.transform = 'translateX(-100%)';
+        navLinks.style.visibility = 'hidden';
+        navLinks.style.opacity = '0';
+        navLinks.style.pointerEvents = 'none';
+      } else {
+        navToggle.classList.add('active');
+        navLinks.classList.add('active');
+        navLinks.style.transform = 'translateX(0)';
+        navLinks.style.visibility = 'visible';
+        navLinks.style.opacity = '1';
+        navLinks.style.pointerEvents = 'auto';
+      }
+      
       console.log('Navigation: navToggle active:', navToggle.classList.contains('active'));
       console.log('Navigation: navLinks active:', navLinks.classList.contains('active'));
     });
