@@ -103,6 +103,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         const scrollManager = new ScrollManager();
         await scrollManager.init();
 
+        // Debug: Check focus section
+        const focusSection = document.getElementById('focus');
+        if (focusSection) {
+          console.log('Focus section found in DOM');
+          const focusLayers = focusSection.querySelectorAll('.focus-layer');
+          console.log('Focus layers found:', focusLayers.length);
+        } else {
+          console.log('Focus section NOT found in DOM');
+        }
+
         // Show main container with animation
         if (mainContainer) {
           console.log('Showing main container');
