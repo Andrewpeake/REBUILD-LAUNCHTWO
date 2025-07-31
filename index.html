@@ -11,8 +11,8 @@
   <title>Urban Air Mobility UCalgary</title>
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="images/uam-logo.png">
-  <link rel="apple-touch-icon" href="images/uam-logo.png">
+  <link rel="icon" type="image/png" href="images/uam-logo.png?v=1">
+  <link rel="apple-touch-icon" href="images/uam-logo.png?v=1">
 
   <!-- Fonts & Styles -->
   <link rel="stylesheet" href="styles.css" />
@@ -26,11 +26,11 @@
   <!-- Background Tesseract Canvas -->
   <canvas id="tesseract-bg"></canvas>
 
-  <nav id="main-nav" class="nav-hidden">
+  <nav id="main-nav" class="nav-visible">
     <div class="nav-container">
       <div class="nav-header">
         <a href="#home" class="nav-logo">
-          <img src="images/uam-logo.png" alt="UAM UCalgary Logo" class="nav-logo-img">
+          <img src="images/uam-logo.png?v=1" alt="UAM UCalgary Logo" class="nav-logo-img">
           <span class="nav-logo-text">UAM UCalgary</span>
         </a>
         <button class="nav-toggle" aria-label="Toggle navigation menu">
@@ -54,7 +54,7 @@
     <section id="home" class="scroll-section hero-section">
       <div class="hero-content">
         <div class="hero-logo">
-          <img src="images/uam-logo.png" alt="UAM UCalgary Logo" class="hero-logo-img">
+          <img src="images/uam-logo.png?v=1" alt="UAM UCalgary Logo" class="hero-logo-img">
         </div>
         <div class="hero-title-topleft">
           <h1 class="hero-title">Urban Air Mobility UCalgary</h1>
@@ -65,7 +65,12 @@
   </main>
 
   <footer id="site-footer">
-    <p>&copy; 2025 Urban Air Mobility UCalgary. All rights reserved.</p>
+    <div class="footer-content">
+      <div class="footer-logo">
+        <img src="images/uam-logo.png?v=1" alt="UAM UCalgary Logo" class="footer-logo-img">
+      </div>
+      <p>&copy; 2025 Urban Air Mobility UCalgary. All rights reserved.</p>
+    </div>
   </footer>
 
   <!-- Main Module Entry -->

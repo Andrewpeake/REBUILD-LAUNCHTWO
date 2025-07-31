@@ -1203,6 +1203,28 @@ section {
   color: var(--text-color-muted);
   background: transparent;
 }
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.footer-logo {
+  margin-bottom: 0.5rem;
+}
+
+.footer-logo-img {
+  height: 60px;
+  width: auto;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.footer-logo:hover .footer-logo-img {
+  transform: scale(1.05);
+}
 #site-footer p {
   margin: 0;
   opacity: 0.6;
@@ -1604,6 +1626,13 @@ body {
 
   .contact-block {
     padding: 1.5rem;
+  }
+}
+
+/* === Footer Mobile === */
+@media (max-width: 768px) {
+  .footer-logo-img {
+    height: 40px;
   }
 }
 
