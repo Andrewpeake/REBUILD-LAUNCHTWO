@@ -12,6 +12,9 @@ export class OurFocusSection extends BaseSection {
 
     console.log('Found focus layers:', layers.length);
 
+    // Initialize GSAP ScrollTrigger animations for lateral sliding
+    this.initScrollAnimations(layers);
+
     // Simple click/touch interaction for all devices
     layers.forEach((layer, index) => {
       console.log(`Setting up layer ${index}:`, layer.textContent.trim());
@@ -97,6 +100,69 @@ export class OurFocusSection extends BaseSection {
     });
 
     console.log('Focus section initialized successfully');
+  }
+
+  initScrollAnimations(layers) {
+    // Check if GSAP and ScrollTrigger are available
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+      console.warn('GSAP or ScrollTrigger not available, skipping scroll animations');
+      return;
+    }
+
+    console.log('Setting up scroll animations for focus layers');
+
+    // Register ScrollTrigger plugin
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Create timeline for staggered lateral sliding animations
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: this.el,
+        start: 'top 80%',
+        end: 'bottom 20%',
+        scrub: 1,
+        markers: false,
+        onEnter: () => console.log('Focus section scroll animation started'),
+        onLeave: () => console.log('Focus section scroll animation completed')
+      }
+    });
+
+    // Add lateral sliding animations for each layer
+    layers.forEach((layer, index) => {
+      const depth = layer.getAttribute('data-depth') || 300;
+      const delay = layer.getAttribute('data-delay') || 0.2;
+      
+      // Set initial position (off-screen to the right)
+      gsap.set(layer, {
+        x: '100vw',
+        opacity: 0
+      });
+
+      // Add to timeline with staggered delay
+      tl.to(layer, {
+        x: 0,
+        opacity: 1,
+        duration: 1,
+        ease: 'power2.out',
+        delay: index * 0.3
+      }, index * 0.2);
+
+      console.log(`Added scroll animation for layer ${index}: ${layer.textContent.trim()}`);
+    });
+
+    // Add parallax effect for the focus section
+    gsap.to('.focus-parallax', {
+      y: -100,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: this.el,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 1
+      }
+    });
+
+    console.log('Scroll animations setup complete');
   }
 }
 
