@@ -141,6 +141,7 @@ section {
   height: 120px;
   width: auto;
   transition: transform 0.3s ease;
+  object-fit: contain;
 }
 
 .hero-logo:hover .hero-logo-img {
@@ -1384,6 +1385,7 @@ body {
   height: 40px;
   width: auto;
   transition: transform 0.3s ease;
+  object-fit: contain;
 }
 
 .nav-logo:hover .nav-logo-img {
@@ -1531,6 +1533,7 @@ body {
   
   .nav-logo-img {
     height: 30px;
+    object-fit: contain;
   }
 
   .nav-links a {
@@ -1619,6 +1622,7 @@ body {
   
   .hero-logo-img {
     height: 80px;
+    object-fit: contain;
   }
   
   .hero-title-topleft {
