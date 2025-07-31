@@ -111,11 +111,17 @@ export function initNavigation() {
   const navToggle = document.querySelector('.nav-toggle');
   const navLinks = document.querySelector('.nav-links');
   
+  console.log('Navigation: navToggle found:', !!navToggle);
+  console.log('Navigation: navLinks found:', !!navLinks);
+  
   if (navToggle && navLinks) {
     navToggle.addEventListener('click', (e) => {
       e.stopPropagation();
+      console.log('Navigation: Mobile menu toggle clicked');
       navToggle.classList.toggle('active');
       navLinks.classList.toggle('active');
+      console.log('Navigation: navToggle active:', navToggle.classList.contains('active'));
+      console.log('Navigation: navLinks active:', navLinks.classList.contains('active'));
     });
 
     // Close mobile menu when clicking a link

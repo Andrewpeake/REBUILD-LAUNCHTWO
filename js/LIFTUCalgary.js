@@ -109,6 +109,14 @@ document.addEventListener('DOMContentLoaded', async () => {
           console.log('Focus section found in DOM');
           const focusLayers = focusSection.querySelectorAll('.focus-layer');
           console.log('Focus layers found:', focusLayers.length);
+          
+          // Test focus section interaction
+          focusLayers.forEach((layer, index) => {
+            console.log(`Focus layer ${index}:`, layer.textContent.trim());
+            layer.addEventListener('click', () => {
+              console.log(`Focus layer ${index} clicked!`);
+            });
+          });
         } else {
           console.log('Focus section NOT found in DOM');
         }
