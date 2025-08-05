@@ -190,34 +190,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     ScrollTrigger.defaults({ markers: false });
     ScrollTrigger.refresh();
 
-    // Update focus section handling for Safari
-    const setupFocusSection = () => {
-      const focusLayers = document.querySelectorAll('.focus-layer');
+    // Initialize ScrollManager to handle all section-specific functionality
+    const scrollManager = new ScrollManager();
+    
+    // Add a small delay to ensure sections are fully loaded
+    setTimeout(() => {
+      console.log('Initializing ScrollManager...');
+      scrollManager.init();
       
-      focusLayers.forEach(layer => {
-        layer.addEventListener('touchstart', function(e) {
-          if (isMobile()) {
-            e.preventDefault();
-            focusLayers.forEach(l => {
-              if (l !== layer) l.classList.remove('active');
-            });
-            layer.classList.toggle('active');
-          }
-        }, { passive: false });
-
-        // Add click handler for non-touch devices
-        layer.addEventListener('click', function(e) {
-          if (!isMobile()) {
-            focusLayers.forEach(l => {
-              if (l !== layer) l.classList.remove('active');
-            });
-            layer.classList.toggle('active');
-          }
-        });
-      });
-    };
-
-    setupFocusSection();
+      // Refresh ScrollTrigger after initialization
+      ScrollTrigger.refresh();
+      console.log('ScrollManager initialization complete');
+    }, 100);
 
     // Update mobile status on resize with debouncing
     let resizeTimer;
@@ -230,7 +214,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (wasMobile !== isMobileNow) {
           document.documentElement.classList.toggle('mobile', isMobileNow);
           document.body.classList.toggle('mobile', isMobileNow);
-          setupFocusSection();
+          // Refresh ScrollTrigger after mobile state change
+          ScrollTrigger.refresh();
         }
       }, 250);
     }, { passive: true });

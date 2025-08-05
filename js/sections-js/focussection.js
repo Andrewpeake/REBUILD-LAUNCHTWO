@@ -3,14 +3,22 @@ import { BaseSection } from './basesection.js';
 export class OurFocusSection extends BaseSection {
   init() {
     super.init();
-    if (!this.el) return;
+    if (!this.el) {
+      console.error('Focus section: No element found');
+      return;
+    }
 
-    console.log('Initializing focus section');
+    console.log('Focus section: Initializing with element:', this.el);
 
     const layers = this.el.querySelectorAll('.focus-layer');
     const isMobile = () => window.innerWidth <= 768;
 
-    console.log('Found focus layers:', layers.length);
+    console.log('Focus section: Found focus layers:', layers.length);
+    
+    if (layers.length === 0) {
+      console.error('Focus section: No focus layers found!');
+      return;
+    }
 
     // Initialize GSAP ScrollTrigger animations for lateral sliding
     this.initScrollAnimations(layers);
