@@ -49,14 +49,17 @@ export class OurFocusSection extends BaseSection {
     // Set initial positions FIRST - this is critical
     this.setInitialPositions();
 
-    // Initialize GSAP ScrollTrigger animations
-    this.initScrollAnimations();
-
-    // Set up interactions
-    this.setupInteractions();
-
-    this.isInitialized = true;
-    console.log('Focus section: Initialization complete');
+    // Wait a bit for the section to be fully rendered before creating ScrollTrigger
+    setTimeout(() => {
+      // Initialize GSAP ScrollTrigger animations
+      this.initScrollAnimations();
+      
+      // Set up interactions
+      this.setupInteractions();
+      
+      this.isInitialized = true;
+      console.log('Focus section: Initialization complete');
+    }, 100);
   }
 
   setInitialPositions() {
@@ -88,43 +91,71 @@ export class OurFocusSection extends BaseSection {
       return;
     }
 
-    console.log('Setting up scroll animations');
+    console.log('Setting up scroll animations for focus section:', this.el);
 
     // Kill any existing ScrollTriggers for this section
     ScrollTrigger.getAll().forEach(trigger => {
       if (trigger.vars.trigger === this.el) {
+        console.log('Killing existing ScrollTrigger for focus section');
         trigger.kill();
       }
     });
 
-    // Create a single timeline for the entire section
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: this.el,
-        start: 'top 80%',
-        end: 'bottom 20%',
-        scrub: false,
-        markers: false,
-        onEnter: () => {
-          console.log('Focus section entering viewport');
-          this.animateLayersIn();
-        },
-        onLeave: () => {
-          console.log('Focus section leaving viewport');
-          this.animateLayersOut();
-        },
-        onEnterBack: () => {
-          console.log('Focus section entering back');
-          this.animateLayersIn();
-        },
-        onLeaveBack: () => {
-          console.log('Focus section leaving back');
-          this.animateLayersOut();
-        }
+    // Create ScrollTrigger directly (not in a timeline)
+    const scrollTrigger = ScrollTrigger.create({
+      trigger: this.el,
+      start: 'top 80%',
+      end: 'bottom 20%',
+      scrub: false,
+      markers: true, // Enable markers for debugging
+      onEnter: () => {
+        console.log('🎯 Focus section entering viewport - triggering animation');
+        this.animateLayersIn();
+      },
+      onLeave: () => {
+        console.log('🎯 Focus section leaving viewport - triggering animation');
+        this.animateLayersOut();
+      },
+      onEnterBack: () => {
+        console.log('🎯 Focus section entering back - triggering animation');
+        this.animateLayersIn();
+      },
+      onLeaveBack: () => {
+        console.log('🎯 Focus section leaving back - triggering animation');
+        this.animateLayersOut();
+      },
+      onRefresh: () => {
+        console.log('🎯 Focus section ScrollTrigger refreshed');
       }
     });
 
-    console.log('ScrollTrigger created for focus section');
+    console.log('ScrollTrigger created for focus section:', scrollTrigger);
+    
+    // Force a refresh to ensure it's working
+    ScrollTrigger.refresh();
+    
+    // Add manual test function to window for debugging
+    window.testFocusAnimations = () => {
+      console.log('🧪 Manually testing focus animations...');
+      console.log('Current layers:', this.layers.length);
+      
+      // Reset to off-screen
+      this.layers.forEach((layer, index) => {
+        gsap.set(layer, {
+          x: '100vw',
+          y: '-50%',
+          opacity: 0
+        });
+      });
+      
+      // Animate in after 1 second
+      setTimeout(() => {
+        console.log('🧪 Animating layers in manually...');
+        this.animateLayersIn();
+      }, 1000);
+    };
+    
+    console.log('🧪 Manual test function available: window.testFocusAnimations()');
   }
 
   animateLayersIn() {
