@@ -18,6 +18,7 @@ const sectionIds = [
   'about',
   'focus',
   'team',
+  'how-it-works',
   'join',
   'contact'
 ];

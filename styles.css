@@ -695,6 +695,164 @@ section {
   background: #ffffff;
 }
 
+/* === How It Works Section === */
+.how-it-works-section {
+  padding: 6rem 2rem;
+  background: transparent;
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+}
+
+.how-it-works-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.how-it-works-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #1a202c;
+  margin-bottom: 4rem;
+  text-align: center;
+}
+
+.steps-container {
+  display: flex;
+  gap: 4rem;
+  align-items: flex-start;
+  position: relative;
+}
+
+.steps-list {
+  flex: 1;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  position: relative;
+}
+
+.step-number-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+.step-number {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #0066cc;
+  background: #f7fafc;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.step-item:hover .step-number {
+  background: #0066cc;
+  color: white;
+  border-color: #0066cc;
+  transform: scale(1.1);
+}
+
+.step-line {
+  position: relative;
+  width: 3px;
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+}
+
+.step-line-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #e2e8f0;
+  border-radius: 2px;
+}
+
+.step-line-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #0066cc;
+  border-radius: 2px;
+  transition: height 0.5s ease;
+}
+
+.step-content {
+  flex: 1;
+  padding-top: 0.5rem;
+}
+
+.step-description {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #4a5568;
+  line-height: 1.6;
+  margin: 0;
+  transition: color 0.3s ease;
+}
+
+.step-item:hover .step-description {
+  color: #1a202c;
+}
+
+.step-visual {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.visual-placeholder {
+  background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+  border-radius: 20px;
+  padding: 3rem;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.visual-placeholder:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.visual-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.visual-text {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin: 0;
+}
+
 
 /* < === TEAM BIO CSS === > */
 .bio-container {
@@ -1562,6 +1720,61 @@ body.site-loaded #site-footer {
     gap: 2rem;
     padding: 1rem;
   }
+
+  .how-it-works-section {
+    padding: 3rem 1rem;
+  }
+
+  .how-it-works-title {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .steps-container {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .steps-list {
+    max-width: 100%;
+    gap: 2rem;
+  }
+
+  .step-item {
+    gap: 1.5rem;
+  }
+
+  .step-number {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.2rem;
+  }
+
+  .step-line {
+    height: 100px;
+  }
+
+  .step-description {
+    font-size: 1.1rem;
+  }
+
+  .step-visual {
+    order: -1;
+    margin-bottom: 2rem;
+  }
+
+  .visual-placeholder {
+    padding: 2rem;
+  }
+
+  .visual-icon {
+    font-size: 3rem;
+  }
+
+  .visual-text {
+    font-size: 1.2rem;
+  }
+}
 
   .team-card {
     max-width: 100%;
