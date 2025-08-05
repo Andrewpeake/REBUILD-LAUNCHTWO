@@ -1307,7 +1307,7 @@ body.site-loaded #site-footer {
 }
 
 .nav-logo-img {
-  height: 2.5rem;
+  height: 1.2rem;
   width: auto;
   transition: transform 0.3s ease;
 }
@@ -1409,7 +1409,7 @@ body.site-loaded #site-footer {
 
 @media (max-width: 768px) {
   .nav-logo-img {
-    height: 2rem;
+    height: 1.2rem;
   }
 
   .nav-logo-text {
