@@ -5,6 +5,7 @@ export class OurFocusSection extends BaseSection {
     super(id);
     this.isInitialized = false;
     this.layers = [];
+    this.hasAnimated = false;
   }
 
   init() {
@@ -86,17 +87,19 @@ export class OurFocusSection extends BaseSection {
   }
 
   initScrollAnimations() {
-    console.log('Setting up scroll animations using Intersection Observer');
+    console.log('Setting up scroll animations using multiple detection methods');
 
-    // Use Intersection Observer instead of ScrollTrigger for better reliability
+    // Method 1: Intersection Observer (primary)
     if ('IntersectionObserver' in window) {
       this.setupIntersectionObserver();
     } else {
-      // Fallback to scroll event listener
       this.setupScrollListener();
     }
+
+    // Method 2: Resize-based trigger (since we know this works!)
+    this.setupResizeTrigger();
     
-    // Add manual test function to window for debugging
+    // Method 3: Manual test function
     window.testFocusAnimations = () => {
       console.log('🧪 Manually testing focus animations...');
       console.log('Current layers:', this.layers.length);
@@ -120,6 +123,53 @@ export class OurFocusSection extends BaseSection {
     console.log('🧪 Manual test function available: window.testFocusAnimations()');
   }
 
+  setupResizeTrigger() {
+    console.log('📏 Setting up resize-based trigger (since resize works!)');
+    
+    // Create a hidden element that we can resize to trigger animations
+    this.resizeTrigger = document.createElement('div');
+    this.resizeTrigger.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+      z-index: -1;
+    `;
+    document.body.appendChild(this.resizeTrigger);
+    
+    // Function to trigger animation
+    const triggerAnimation = () => {
+      console.log('📏 Resize trigger activated - checking if focus section is in view');
+      
+      const rect = this.el.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      
+      // Check if section is in viewport
+      const isInView = rect.top < windowHeight * 0.8 && rect.bottom > windowHeight * 0.2;
+      
+      if (isInView && !this.hasAnimated) {
+        console.log('📏 Focus section in view - triggering animation via resize method');
+        this.hasAnimated = true;
+        this.animateLayersIn();
+      }
+    };
+    
+    // Trigger on initial load
+    setTimeout(triggerAnimation, 500);
+    
+    // Also trigger on scroll (as backup)
+    let scrollTimeout;
+    window.addEventListener('scroll', () => {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(triggerAnimation, 100);
+    }, { passive: true });
+    
+    console.log('📏 Resize trigger setup complete');
+  }
+
   setupIntersectionObserver() {
     console.log('🔍 Setting up Intersection Observer for focus section');
     
@@ -133,9 +183,13 @@ export class OurFocusSection extends BaseSection {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           console.log('🎯 Focus section entering viewport (Intersection Observer)');
-          this.animateLayersIn();
+          if (!this.hasAnimated) {
+            this.hasAnimated = true;
+            this.animateLayersIn();
+          }
         } else {
           console.log('🎯 Focus section leaving viewport (Intersection Observer)');
+          this.hasAnimated = false;
           this.animateLayersOut();
         }
       });
@@ -144,6 +198,39 @@ export class OurFocusSection extends BaseSection {
     // Start observing the focus section
     this.observer.observe(this.el);
     console.log('🔍 Intersection Observer started for focus section');
+    
+    // Also add a simple scroll check as backup
+    this.setupSimpleScrollCheck();
+  }
+
+  setupSimpleScrollCheck() {
+    console.log('📜 Setting up simple scroll check as backup');
+    
+    const checkIfInView = () => {
+      const rect = this.el.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      
+      // Check if section is in viewport
+      const isInView = rect.top < windowHeight * 0.8 && rect.bottom > windowHeight * 0.2;
+      
+      if (isInView && !this.hasAnimated) {
+        console.log('📜 Simple scroll check: Focus section in view - triggering animation');
+        this.hasAnimated = true;
+        this.animateLayersIn();
+      } else if (!isInView && this.hasAnimated) {
+        console.log('📜 Simple scroll check: Focus section out of view - resetting');
+        this.hasAnimated = false;
+        this.animateLayersOut();
+      }
+    };
+    
+    // Check on scroll
+    window.addEventListener('scroll', checkIfInView, { passive: true });
+    
+    // Check immediately
+    setTimeout(checkIfInView, 100);
+    
+    console.log('📜 Simple scroll check setup complete');
   }
 
   setupScrollListener() {
