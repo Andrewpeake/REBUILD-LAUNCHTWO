@@ -28,12 +28,9 @@ async function preloadSections() {
 // Fetch section content
 async function fetchSection(id) {
   try {
-    console.log(`Fetching section: sections-html/${id}.html`);
     const res = await fetch(`sections-html/${id}.html`);
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-    const text = await res.text();
-    console.log(`Successfully fetched section: ${id}`);
-    return text;
+    return await res.text();
   } catch (error) {
     console.error(`Failed to fetch section: ${id}`, error);
     throw error;
@@ -65,26 +62,12 @@ export function preloadSection(id) {
 // Load sections with caching
 export async function loadSections(sectionIds) {
   const container = document.getElementById('main-container');
-  if (!container) {
-    console.error('Main container not found!');
-    return [];
-  }
+  if (!container) return [];
 
-  console.log('Loading sections:', sectionIds);
   const loaded = [];
 
   for (const id of sectionIds) {
     try {
-      // Check if section already exists in DOM
-      const existingSection = document.getElementById(id);
-      if (existingSection) {
-        console.log(`Section ${id} already exists in DOM, skipping load`);
-        loaded.push(id);
-        continue;
-      }
-
-      console.log(`Loading section: ${id}`);
-
       let html;
       
       // Check cache first
@@ -101,22 +84,16 @@ export async function loadSections(sectionIds) {
       const section = tempContainer.firstElementChild;
       
       if (section) {
-        console.log(`Adding section ${id} to DOM`);
         section.classList.add('section-enter');
         container.appendChild(section);
 
-        // Trigger enter animation immediately
+        // Trigger enter animation
         requestAnimationFrame(() => {
           section.classList.add('section-enter-active');
-          // Force visibility after a short delay
-          setTimeout(() => {
-            section.style.opacity = '1';
-            section.style.transform = 'translateY(0)';
+          section.addEventListener('transitionend', () => {
             section.classList.remove('section-enter', 'section-enter-active');
-          }, 100);
+          }, { once: true });
         });
-      } else {
-        console.error(`No section element found in HTML for ${id}`);
       }
 
       loaded.push(id);

@@ -10,10 +10,6 @@
   <meta name="theme-color" content="#ffffff" />
   <title>Urban Air Mobility UCalgary</title>
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="images/uam-logo.png?v=1">
-  <link rel="apple-touch-icon" href="images/uam-logo.png?v=1">
-
   <!-- Fonts & Styles -->
   <link rel="stylesheet" href="styles.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
@@ -26,13 +22,10 @@
   <!-- Background Tesseract Canvas -->
   <canvas id="tesseract-bg"></canvas>
 
-  <nav id="main-nav" class="nav-visible">
+  <nav id="main-nav" class="nav-hidden">
     <div class="nav-container">
       <div class="nav-header">
-        <a href="#home" class="nav-logo">
-          <img src="images/uam-logo.png?v=1" alt="UAM UCalgary Logo" class="nav-logo-img">
-          <span class="nav-logo-text">UAM UCalgary</span>
-        </a>
+        <a href="#home" class="nav-logo">UAM UCalgary</a>
         <button class="nav-toggle" aria-label="Toggle navigation menu">
           <span></span>
           <span></span>
@@ -50,32 +43,86 @@
   </nav>
 
   <!-- Main Site Content -->
-  <main id="main-container">
-    <section id="home" class="scroll-section hero-section">
-      <div class="hero-content">
-        <div class="hero-logo">
-          <img src="images/uam-logo.png?v=1" alt="UAM UCalgary Logo" class="hero-logo-img">
-        </div>
-        <div class="hero-title-topleft">
-          <h1 class="hero-title">Urban Air Mobility UCalgary</h1>
-          <p class="hero-sub">Advanced Air Mobility Club</p>
-        </div>
-      </div>
+  <main id="main-container" style="display: none;">
+    <section id="home" class="scroll-section home-header">
+      <h1 class="home-logo-title">UAMUCalgary</h1>
     </section>
   </main>
 
-  <footer id="site-footer">
-    <div class="footer-content">
-      <div class="footer-logo">
-        <img src="images/uam-logo.png?v=1" alt="UAM UCalgary Logo" class="footer-logo-img">
-      </div>
-      <p>&copy; 2025 Urban Air Mobility UCalgary. All rights reserved.</p>
-    </div>
+  <footer id="site-footer" style="display: none;">
+    <p>&copy; 2025 Urban Air Mobility UCalgary. All rights reserved.</p>
   </footer>
 
   <!-- Main Module Entry -->
   <script type="module" src="js/LIFTUCalgary.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // AAM items click handler
+    const items = document.querySelectorAll('.aam-item');
+    items.forEach(item => {
+      item.addEventListener('click', () => {
+        items.forEach(i => {
+          if (i !== item) i.classList.remove('active');
+        });
+        item.classList.toggle('active');
+      });
+    });
 
+    // Mobile menu toggle
+    const navToggle = document.querySelector('.nav-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    
+    navToggle.addEventListener('click', () => {
+      navToggle.classList.toggle('active');
+      navLinks.classList.toggle('active');
+    });
+
+    // Close mobile menu when clicking a link
+    const navLinksArray = document.querySelectorAll('.nav-links a');
+    navLinksArray.forEach(link => {
+      link.addEventListener('click', () => {
+        navToggle.classList.remove('active');
+        navLinks.classList.remove('active');
+      });
+    });
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.nav-container')) {
+        navToggle.classList.remove('active');
+        navLinks.classList.remove('active');
+      }
+    });
+
+    // Focus section mobile interaction
+    const focusLayers = document.querySelectorAll('.focus-layer');
+    const isMobile = () => window.innerWidth <= 768;
+
+    focusLayers.forEach(layer => {
+      layer.addEventListener('click', () => {
+        if (isMobile()) {
+          // Close other layers
+          focusLayers.forEach(l => {
+            if (l !== layer) l.classList.remove('active');
+          });
+          // Toggle current layer
+          layer.classList.toggle('active');
+        }
+      });
+    });
+
+    // Handle resize events
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (!isMobile()) {
+          focusLayers.forEach(layer => layer.classList.remove('active'));
+        }
+      }, 250);
+    });
+  });
+</script>
 
 </body>
 </html>

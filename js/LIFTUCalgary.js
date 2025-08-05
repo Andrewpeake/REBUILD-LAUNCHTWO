@@ -65,14 +65,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Show loading state
     const mainContainer = document.getElementById('main-container');
     if (mainContainer) {
-      mainContainer.style.display = 'block';
       mainContainer.style.opacity = '0';
     }
 
-    // Initialize tesseract with error handling
+    // Initialize tesseract with error handling and mobile optimization
     try {
       console.log('Starting tesseract initialization...');
-      initTesseract();
+      if (!isMobile()) {
+        initTesseract();
+      } else {
+        // Simplified background for mobile
+        const canvas = document.getElementById('tesseract-bg');
+        if (canvas) {
+          canvas.style.display = 'none';
+        }
+      }
       console.log('Tesseract initialized successfully');
     } catch (error) {
       console.error('Error initializing tesseract:', error);
@@ -99,59 +106,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         performance.mark('sections-load-end');
         performance.measure('sections-load', 'sections-load-start', 'sections-load-end');
         
-        // Wait for all sections to be fully rendered
-        await new Promise(resolve => {
-          const checkSections = () => {
-            const allSectionsExist = sectionIds.every(id => {
-              const section = document.getElementById(id);
-              return section && section.offsetHeight > 0;
-            });
-            
-            if (allSectionsExist) {
-              console.log('All sections are fully rendered');
-              resolve();
-            } else {
-              console.log('Waiting for sections to render...');
-              setTimeout(checkSections, 50);
-            }
-          };
-          checkSections();
-        });
-        
         // Initialize scroll manager
         const scrollManager = new ScrollManager();
         await scrollManager.init();
 
-        // Debug: Check focus section
-        const focusSection = document.getElementById('focus');
-        if (focusSection) {
-          console.log('Focus section found in DOM');
-          const focusLayers = focusSection.querySelectorAll('.focus-layer');
-          console.log('Focus layers found:', focusLayers.length);
-          
-          // Test focus section interaction
-          focusLayers.forEach((layer, index) => {
-            console.log(`Focus layer ${index}:`, layer.textContent.trim());
-            layer.addEventListener('click', () => {
-              console.log(`Focus layer ${index} clicked!`);
-            });
-          });
-        } else {
-          console.log('Focus section NOT found in DOM');
-        }
-
         // Show main container with animation
         if (mainContainer) {
-          console.log('Showing main container');
           mainContainer.style.display = 'block';
-          mainContainer.style.opacity = '1';
           gsap.to(mainContainer, {
             opacity: 1,
             duration: 1,
             ease: 'power2.out'
           });
-        } else {
-          console.error('Main container not found!');
         }
 
         // Show footer
@@ -183,14 +149,6 @@ document.addEventListener('DOMContentLoaded', async () => {
           loadTime: performance.now() - performanceMetrics.startTime
         });
 
-        // Debug: Check what sections are actually in the DOM
-        console.log('=== DEBUG: Checking sections in DOM ===');
-        sectionIds.forEach(id => {
-          const section = document.getElementById(id);
-          console.log(`Section ${id}:`, section ? 'EXISTS' : 'MISSING');
-        });
-        console.log('=== END DEBUG ===');
-
       } catch (error) {
         console.error('Error showing site:', error);
         appState.addError({
@@ -200,25 +158,84 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     };
 
-    console.log('About to show site...');
-    await showSite();
-    console.log('Site show complete');
+    if (skipIntro === 'true') {
+      sessionStorage.removeItem('skipIntro');
+      sessionStorage.removeItem('scrollTo');
+      await showSite();
+    } else {
+      await showSite();
+    }
 
+    // Initialize AAM interaction with error handling
+    try {
+      const items = document.querySelectorAll('.aam-item');
+      items.forEach(item => {
+        item.addEventListener('click', () => {
+          const details = item.nextElementSibling;
 
+          // Track interaction
+          appState.trackInteraction('aam_item_click', {
+            itemId: item.id || 'unknown'
+          });
+
+          document.querySelectorAll('.aam-details').forEach(detail => {
+            detail.style.maxHeight = '0px';
+            detail.style.opacity = '0';
+            detail.style.transition = 'max-height 0.5s ease, opacity 0.4s ease';
+          });
+
+          items.forEach(i => i.classList.remove('active'));
+
+          if (!item.classList.contains('active')) {
+            item.classList.add('active');
+            details.style.maxHeight = details.scrollHeight + 'px';
+            details.style.opacity = '1';
+          } else {
+            item.classList.remove('active');
+            details.style.maxHeight = '0px';
+            details.style.opacity = '0';
+          }
+        });
+      });
+    } catch (error) {
+      console.error('Error setting up AAM interactions:', error);
+      appState.addError({
+        type: 'aam_setup_error',
+        error: error.message
+      });
+    }
 
     ScrollTrigger.defaults({ markers: false });
     ScrollTrigger.refresh();
 
-    // Initialize ScrollManager to handle all section-specific functionality
-    const scrollManager = new ScrollManager();
-    
-    // Initialize immediately after sections are loaded
-    console.log('Initializing ScrollManager...');
-    scrollManager.init();
-    
-    // Refresh ScrollTrigger after initialization
-    ScrollTrigger.refresh();
-    console.log('ScrollManager initialization complete');
+    // Update focus section handling for Safari
+    const setupFocusSection = () => {
+      const focusLayers = document.querySelectorAll('.focus-layer');
+      
+      focusLayers.forEach(layer => {
+        layer.addEventListener('touchstart', function(e) {
+          if (isMobile()) {
+            e.preventDefault();
+            focusLayers.forEach(l => {
+              if (l !== layer) l.classList.remove('active');
+            });
+            layer.classList.toggle('active');
+          }
+        }, { passive: false });
+
+        // Add click handler for non-touch devices
+        layer.addEventListener('click', function(e) {
+          if (!isMobile()) {
+            focusLayers.forEach(l => {
+              if (l !== layer) l.classList.remove('active');
+            });
+            layer.classList.toggle('active');
+          }
+        });
+      });
+    };
+
+    setupFocusSection();
 
     // Update mobile status on resize with debouncing
     let resizeTimer;
@@ -231,15 +248,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (wasMobile !== isMobileNow) {
           document.documentElement.classList.toggle('mobile', isMobileNow);
           document.body.classList.toggle('mobile', isMobileNow);
-        }
-        
-        // Always refresh ScrollTrigger and reinitialize focus section on resize
-        ScrollTrigger.refresh();
-        
-        // Reinitialize focus section if it exists
-        const focusSection = scrollManager.sections.find(s => s.constructor.name === 'OurFocusSection');
-        if (focusSection) {
-          focusSection.reinitialize();
+          setupFocusSection();
         }
       }, 250);
     }, { passive: true });

@@ -20,12 +20,7 @@ export class ScrollManager {
   }
 
   init() {
-    console.log('ScrollManager: Initializing sections...');
-    this.sections.forEach(section => {
-      console.log(`ScrollManager: Initializing section: ${section.constructor.name}`);
-      section.init();
-    });
-    console.log('ScrollManager: All sections initialized');
+    this.sections.forEach(section => section.init());
   }
 }
 
