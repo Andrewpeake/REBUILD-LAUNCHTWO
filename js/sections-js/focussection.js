@@ -1,8 +1,22 @@
 import { BaseSection } from './basesection.js';
 
 export class OurFocusSection extends BaseSection {
+  constructor(id) {
+    super(id);
+    this.isInitialized = false;
+    this.layers = [];
+  }
+
   init() {
     super.init();
+    
+    // Only initialize once
+    if (this.isInitialized) {
+      console.log('Focus section already initialized, skipping');
+      return;
+    }
+
+    console.log('Focus section: Starting initialization');
     
     // Wait for the element to be fully rendered
     const waitForElement = () => {
@@ -11,47 +25,139 @@ export class OurFocusSection extends BaseSection {
         return;
       }
 
-      const layers = this.el.querySelectorAll('.focus-layer');
-      console.log('Focus section: Found focus layers:', layers.length);
+      this.layers = this.el.querySelectorAll('.focus-layer');
+      console.log('Focus section: Found focus layers:', this.layers.length);
       
-      if (layers.length === 0) {
+      if (this.layers.length === 0) {
         console.log('Focus section: Waiting for layers to render...');
-        setTimeout(waitForElement, 50);
+        setTimeout(waitForElement, 100);
         return;
       }
 
-      console.log('Focus section: Initializing with element:', this.el);
-      this.initializeFocusSection(layers);
+      console.log('Focus section: All layers found, initializing...');
+      this.initializeFocusSection();
     };
     
     waitForElement();
   }
 
-  initializeFocusSection(layers) {
+  initializeFocusSection() {
+    if (this.isInitialized) return;
+    
     const isMobile = () => window.innerWidth <= 768;
 
-    // Initialize GSAP ScrollTrigger animations for lateral sliding
-    this.initScrollAnimations(layers);
+    // Set initial positions FIRST - this is critical
+    this.setInitialPositions();
 
-    // Simple click/touch interaction for all devices
-    layers.forEach((layer, index) => {
-      console.log(`Setting up layer ${index}:`, layer.textContent.trim());
+    // Initialize GSAP ScrollTrigger animations
+    this.initScrollAnimations();
+
+    // Set up interactions
+    this.setupInteractions();
+
+    this.isInitialized = true;
+    console.log('Focus section: Initialization complete');
+  }
+
+  setInitialPositions() {
+    console.log('Setting initial positions for all layers');
+    
+    this.layers.forEach((layer, index) => {
+      // Force initial position off-screen
+      gsap.set(layer, {
+        x: '100vw',
+        opacity: 0,
+        clearProps: 'transform'
+      });
       
-      const reveal = layer.querySelector('.focus-reveal');
-      if (!reveal) {
-        console.error('No reveal element found for layer:', layer.textContent.trim());
-        return;
+      console.log(`Layer ${index} set to: x=100vw, opacity=0`);
+    });
+  }
+
+  initScrollAnimations() {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+      console.error('GSAP or ScrollTrigger not available');
+      return;
+    }
+
+    console.log('Setting up scroll animations');
+
+    // Kill any existing ScrollTriggers for this section
+    ScrollTrigger.getAll().forEach(trigger => {
+      if (trigger.vars.trigger === this.el) {
+        trigger.kill();
       }
+    });
+
+    // Create a single timeline for the entire section
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: this.el,
+        start: 'top 80%',
+        end: 'bottom 20%',
+        scrub: false,
+        markers: false,
+        onEnter: () => {
+          console.log('Focus section entering viewport');
+          this.animateLayersIn();
+        },
+        onLeave: () => {
+          console.log('Focus section leaving viewport');
+          this.animateLayersOut();
+        },
+        onEnterBack: () => {
+          console.log('Focus section entering back');
+          this.animateLayersIn();
+        },
+        onLeaveBack: () => {
+          console.log('Focus section leaving back');
+          this.animateLayersOut();
+        }
+      }
+    });
+
+    console.log('ScrollTrigger created for focus section');
+  }
+
+  animateLayersIn() {
+    console.log('Animating layers in');
+    
+    this.layers.forEach((layer, index) => {
+      gsap.to(layer, {
+        x: 0,
+        opacity: 1,
+        duration: 0.8,
+        ease: 'power2.out',
+        delay: index * 0.2
+      });
+    });
+  }
+
+  animateLayersOut() {
+    console.log('Animating layers out');
+    
+    this.layers.forEach((layer, index) => {
+      gsap.to(layer, {
+        x: '100vw',
+        opacity: 0,
+        duration: 0.5,
+        ease: 'power2.in'
+      });
+    });
+  }
+
+  setupInteractions() {
+    this.layers.forEach((layer, index) => {
+      const reveal = layer.querySelector('.focus-reveal');
+      if (!reveal) return;
 
       // Click/touch handler
       const handleInteraction = (e) => {
         e.preventDefault();
         e.stopPropagation();
         
-        console.log('Interaction with layer:', layer.textContent.trim());
-        
         // Close all other layers
-        layers.forEach(l => {
+        this.layers.forEach(l => {
           if (l !== layer) {
             l.classList.remove('active');
             const r = l.querySelector('.focus-reveal');
@@ -68,28 +174,23 @@ export class OurFocusSection extends BaseSection {
         layer.classList.toggle('active');
         
         if (isActive) {
-          // Close
           reveal.style.opacity = '0';
           reveal.style.visibility = 'hidden';
           reveal.style.maxHeight = '0';
         } else {
-          // Open
           reveal.style.opacity = '1';
           reveal.style.visibility = 'visible';
           reveal.style.maxHeight = '300px';
         }
       };
 
-      // Add event listeners
       layer.addEventListener('click', handleInteraction);
       layer.addEventListener('touchstart', handleInteraction, { passive: false });
       
-      // Add hover for desktop
-      if (!isMobile()) {
+      // Desktop hover
+      if (window.innerWidth > 768) {
         layer.addEventListener('mouseenter', () => {
-          console.log('Desktop hover on:', layer.textContent.trim());
-          // Close all others
-          layers.forEach(l => {
+          this.layers.forEach(l => {
             if (l !== layer) {
               l.classList.remove('active');
               const r = l.querySelector('.focus-reveal');
@@ -101,7 +202,6 @@ export class OurFocusSection extends BaseSection {
             }
           });
           
-          // Open current
           layer.classList.add('active');
           reveal.style.opacity = '1';
           reveal.style.visibility = 'visible';
@@ -116,145 +216,12 @@ export class OurFocusSection extends BaseSection {
         });
       }
     });
-
-    console.log('Focus section initialized successfully');
   }
 
-  initScrollAnimations(layers) {
-    // Check if GSAP and ScrollTrigger are available
-    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
-      console.warn('GSAP or ScrollTrigger not available, skipping scroll animations');
-      return;
-    }
-
-    console.log('Setting up scroll animations for focus layers');
-
-    // Register ScrollTrigger plugin
-    gsap.registerPlugin(ScrollTrigger);
-
-    // Kill any existing ScrollTriggers for this section
-    ScrollTrigger.getAll().forEach(trigger => {
-      if (trigger.vars.trigger === this.el) {
-        trigger.kill();
-      }
-    });
-
-    // Set initial positions for all layers (off-screen to the right)
-    layers.forEach((layer, index) => {
-      // Force initial position off-screen
-      gsap.set(layer, {
-        x: '100vw',
-        opacity: 0,
-        clearProps: 'transform' // Clear any existing transforms
-      });
-      
-      console.log(`Set layer ${index} to initial position: x=100vw, opacity=0`);
-    });
-
-    // Create individual ScrollTriggers for each layer with staggered timing
-    layers.forEach((layer, index) => {
-      const delay = index * 0.2; // Stagger delay
-      
-      const trigger = ScrollTrigger.create({
-        trigger: this.el,
-        start: `top ${80 - (index * 10)}%`, // Staggered start points
-        end: 'bottom 20%',
-        onEnter: () => {
-          console.log(`Layer ${index} entering: ${layer.textContent.trim()}`);
-          gsap.to(layer, {
-            x: 0,
-            opacity: 1,
-            duration: 0.8,
-            ease: 'power2.out',
-            delay: delay
-          });
-        },
-        onLeave: () => {
-          console.log(`Layer ${index} leaving: ${layer.textContent.trim()}`);
-          gsap.to(layer, {
-            x: '-100vw',
-            opacity: 0,
-            duration: 0.5,
-            ease: 'power2.in'
-          });
-        },
-        onEnterBack: () => {
-          console.log(`Layer ${index} entering back: ${layer.textContent.trim()}`);
-          gsap.to(layer, {
-            x: 0,
-            opacity: 1,
-            duration: 0.8,
-            ease: 'power2.out',
-            delay: delay
-          });
-        },
-        onLeaveBack: () => {
-          console.log(`Layer ${index} leaving back: ${layer.textContent.trim()}`);
-          gsap.to(layer, {
-            x: '100vw',
-            opacity: 0,
-            duration: 0.5,
-            ease: 'power2.in'
-          });
-        }
-      });
-      
-      console.log(`Created ScrollTrigger for layer ${index}:`, trigger);
-    });
-
-    // Add subtle parallax effect for the focus section background
-    ScrollTrigger.create({
-      trigger: this.el,
-      start: 'top bottom',
-      end: 'bottom top',
-      scrub: 1,
-      onUpdate: (self) => {
-        const progress = self.progress;
-        gsap.set('.focus-parallax', {
-          y: progress * -50 // Subtle parallax effect
-        });
-      }
-    });
-
-    console.log('Scroll animations setup complete');
-    
-    // Add manual test function to window for debugging
-    window.testFocusAnimations = () => {
-      console.log('Manually testing focus animations...');
-      layers.forEach((layer, index) => {
-        gsap.set(layer, { x: '100vw', opacity: 0 });
-        setTimeout(() => {
-          gsap.to(layer, {
-            x: 0,
-            opacity: 1,
-            duration: 0.8,
-            ease: 'power2.out',
-            delay: index * 0.2
-          });
-        }, 500);
-      });
-    };
-    
-    console.log('Test function available: window.testFocusAnimations()');
-  }
-
-  // Fallback method to reinitialize on resize
   reinitialize() {
-    console.log('Focus section: Reinitializing due to resize');
-    
-    // Reset all layers to off-screen position first
-    const layers = this.el?.querySelectorAll('.focus-layer');
-    if (layers) {
-      layers.forEach((layer, index) => {
-        gsap.set(layer, {
-          x: '100vw',
-          opacity: 0
-        });
-        console.log(`Reset layer ${index} to off-screen position`);
-      });
-    }
-    
-    // Then reinitialize
+    console.log('Focus section: Reinitializing');
+    this.isInitialized = false;
+    this.setInitialPositions();
     this.init();
   }
 }
