@@ -86,53 +86,15 @@ export class OurFocusSection extends BaseSection {
   }
 
   initScrollAnimations() {
-    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
-      console.error('GSAP or ScrollTrigger not available');
-      return;
+    console.log('Setting up scroll animations using Intersection Observer');
+
+    // Use Intersection Observer instead of ScrollTrigger for better reliability
+    if ('IntersectionObserver' in window) {
+      this.setupIntersectionObserver();
+    } else {
+      // Fallback to scroll event listener
+      this.setupScrollListener();
     }
-
-    console.log('Setting up scroll animations for focus section:', this.el);
-
-    // Kill any existing ScrollTriggers for this section
-    ScrollTrigger.getAll().forEach(trigger => {
-      if (trigger.vars.trigger === this.el) {
-        console.log('Killing existing ScrollTrigger for focus section');
-        trigger.kill();
-      }
-    });
-
-    // Create ScrollTrigger directly (not in a timeline)
-    const scrollTrigger = ScrollTrigger.create({
-      trigger: this.el,
-      start: 'top 80%',
-      end: 'bottom 20%',
-      scrub: false,
-      markers: true, // Enable markers for debugging
-      onEnter: () => {
-        console.log('🎯 Focus section entering viewport - triggering animation');
-        this.animateLayersIn();
-      },
-      onLeave: () => {
-        console.log('🎯 Focus section leaving viewport - triggering animation');
-        this.animateLayersOut();
-      },
-      onEnterBack: () => {
-        console.log('🎯 Focus section entering back - triggering animation');
-        this.animateLayersIn();
-      },
-      onLeaveBack: () => {
-        console.log('🎯 Focus section leaving back - triggering animation');
-        this.animateLayersOut();
-      },
-      onRefresh: () => {
-        console.log('🎯 Focus section ScrollTrigger refreshed');
-      }
-    });
-
-    console.log('ScrollTrigger created for focus section:', scrollTrigger);
-    
-    // Force a refresh to ensure it's working
-    ScrollTrigger.refresh();
     
     // Add manual test function to window for debugging
     window.testFocusAnimations = () => {
@@ -156,6 +118,82 @@ export class OurFocusSection extends BaseSection {
     };
     
     console.log('🧪 Manual test function available: window.testFocusAnimations()');
+  }
+
+  setupIntersectionObserver() {
+    console.log('🔍 Setting up Intersection Observer for focus section');
+    
+    const options = {
+      root: null, // Use viewport as root
+      rootMargin: '-20% 0px -20% 0px', // Trigger when 20% from top and bottom
+      threshold: 0.1 // Trigger when 10% of element is visible
+    };
+
+    this.observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          console.log('🎯 Focus section entering viewport (Intersection Observer)');
+          this.animateLayersIn();
+        } else {
+          console.log('🎯 Focus section leaving viewport (Intersection Observer)');
+          this.animateLayersOut();
+        }
+      });
+    }, options);
+
+    // Start observing the focus section
+    this.observer.observe(this.el);
+    console.log('🔍 Intersection Observer started for focus section');
+  }
+
+  setupScrollListener() {
+    console.log('📜 Setting up scroll listener for focus section (fallback)');
+    
+    let isAnimating = false;
+    let hasAnimated = false;
+
+    const checkScroll = () => {
+      if (isAnimating) return;
+
+      const rect = this.el.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      
+      // Check if section is in viewport (20% from top, 20% from bottom)
+      const isInView = rect.top < windowHeight * 0.8 && rect.bottom > windowHeight * 0.2;
+      
+      if (isInView && !hasAnimated) {
+        console.log('🎯 Focus section entering viewport (Scroll Listener)');
+        hasAnimated = true;
+        isAnimating = true;
+        this.animateLayersIn();
+        setTimeout(() => { isAnimating = false; }, 1000);
+      } else if (!isInView && hasAnimated) {
+        console.log('🎯 Focus section leaving viewport (Scroll Listener)');
+        hasAnimated = false;
+        isAnimating = true;
+        this.animateLayersOut();
+        setTimeout(() => { isAnimating = false; }, 500);
+      }
+    };
+
+    // Add scroll listener with throttling
+    let ticking = false;
+    const scrollHandler = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          checkScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', scrollHandler, { passive: true });
+    
+    // Check initial position
+    setTimeout(checkScroll, 100);
+    
+    console.log('📜 Scroll listener setup complete');
   }
 
   animateLayersIn() {
@@ -261,6 +299,13 @@ export class OurFocusSection extends BaseSection {
 
   reinitialize() {
     console.log('Focus section: Reinitializing');
+    
+    // Clean up existing observer
+    if (this.observer) {
+      this.observer.disconnect();
+      this.observer = null;
+    }
+    
     this.isInitialized = false;
     this.setInitialPositions();
     this.init();
