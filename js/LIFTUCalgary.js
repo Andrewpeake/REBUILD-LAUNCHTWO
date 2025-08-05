@@ -99,6 +99,25 @@ document.addEventListener('DOMContentLoaded', async () => {
         performance.mark('sections-load-end');
         performance.measure('sections-load', 'sections-load-start', 'sections-load-end');
         
+        // Wait for all sections to be fully rendered
+        await new Promise(resolve => {
+          const checkSections = () => {
+            const allSectionsExist = sectionIds.every(id => {
+              const section = document.getElementById(id);
+              return section && section.offsetHeight > 0;
+            });
+            
+            if (allSectionsExist) {
+              console.log('All sections are fully rendered');
+              resolve();
+            } else {
+              console.log('Waiting for sections to render...');
+              setTimeout(checkSections, 50);
+            }
+          };
+          checkSections();
+        });
+        
         // Initialize scroll manager
         const scrollManager = new ScrollManager();
         await scrollManager.init();
@@ -193,15 +212,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Initialize ScrollManager to handle all section-specific functionality
     const scrollManager = new ScrollManager();
     
-    // Add a small delay to ensure sections are fully loaded
-    setTimeout(() => {
-      console.log('Initializing ScrollManager...');
-      scrollManager.init();
-      
-      // Refresh ScrollTrigger after initialization
-      ScrollTrigger.refresh();
-      console.log('ScrollManager initialization complete');
-    }, 100);
+    // Initialize immediately after sections are loaded
+    console.log('Initializing ScrollManager...');
+    scrollManager.init();
+    
+    // Refresh ScrollTrigger after initialization
+    ScrollTrigger.refresh();
+    console.log('ScrollManager initialization complete');
 
     // Update mobile status on resize with debouncing
     let resizeTimer;
@@ -214,8 +231,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (wasMobile !== isMobileNow) {
           document.documentElement.classList.toggle('mobile', isMobileNow);
           document.body.classList.toggle('mobile', isMobileNow);
-          // Refresh ScrollTrigger after mobile state change
-          ScrollTrigger.refresh();
+        }
+        
+        // Always refresh ScrollTrigger and reinitialize focus section on resize
+        ScrollTrigger.refresh();
+        
+        // Reinitialize focus section if it exists
+        const focusSection = scrollManager.sections.find(s => s.constructor.name === 'OurFocusSection');
+        if (focusSection) {
+          focusSection.reinitialize();
         }
       }, 250);
     }, { passive: true });

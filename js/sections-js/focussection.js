@@ -3,22 +3,32 @@ import { BaseSection } from './basesection.js';
 export class OurFocusSection extends BaseSection {
   init() {
     super.init();
-    if (!this.el) {
-      console.error('Focus section: No element found');
-      return;
-    }
-
-    console.log('Focus section: Initializing with element:', this.el);
-
-    const layers = this.el.querySelectorAll('.focus-layer');
-    const isMobile = () => window.innerWidth <= 768;
-
-    console.log('Focus section: Found focus layers:', layers.length);
     
-    if (layers.length === 0) {
-      console.error('Focus section: No focus layers found!');
-      return;
-    }
+    // Wait for the element to be fully rendered
+    const waitForElement = () => {
+      if (!this.el) {
+        console.error('Focus section: No element found');
+        return;
+      }
+
+      const layers = this.el.querySelectorAll('.focus-layer');
+      console.log('Focus section: Found focus layers:', layers.length);
+      
+      if (layers.length === 0) {
+        console.log('Focus section: Waiting for layers to render...');
+        setTimeout(waitForElement, 50);
+        return;
+      }
+
+      console.log('Focus section: Initializing with element:', this.el);
+      this.initializeFocusSection(layers);
+    };
+    
+    waitForElement();
+  }
+
+  initializeFocusSection(layers) {
+    const isMobile = () => window.innerWidth <= 768;
 
     // Initialize GSAP ScrollTrigger animations for lateral sliding
     this.initScrollAnimations(layers);
@@ -195,6 +205,12 @@ export class OurFocusSection extends BaseSection {
     });
 
     console.log('Scroll animations setup complete');
+  }
+
+  // Fallback method to reinitialize on resize
+  reinitialize() {
+    console.log('Focus section: Reinitializing due to resize');
+    this.init();
   }
 }
 
