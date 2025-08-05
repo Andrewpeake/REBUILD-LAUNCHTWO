@@ -10,6 +10,9 @@ html, body {
   -webkit-text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Improve scrolling performance */
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
 }
 
 html {
@@ -420,6 +423,8 @@ section {
   text-align: center;
   color: #000;
   user-select: none;
+  /* Ensure GSAP can control positioning */
+  transform-origin: center center;
 }
 
 .focus-layer:hover {

@@ -114,51 +114,75 @@ export class OurFocusSection extends BaseSection {
     // Register ScrollTrigger plugin
     gsap.registerPlugin(ScrollTrigger);
 
-    // Create timeline for staggered lateral sliding animations
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: this.el,
-        start: 'top 80%',
-        end: 'bottom 20%',
-        scrub: 1,
-        markers: false,
-        onEnter: () => console.log('Focus section scroll animation started'),
-        onLeave: () => console.log('Focus section scroll animation completed')
-      }
-    });
-
-    // Add lateral sliding animations for each layer
+    // Set initial positions for all layers (off-screen to the right)
     layers.forEach((layer, index) => {
-      const depth = layer.getAttribute('data-depth') || 300;
-      const delay = layer.getAttribute('data-delay') || 0.2;
-      
-      // Set initial position (off-screen to the right)
       gsap.set(layer, {
         x: '100vw',
-        opacity: 0
+        opacity: 0,
+        clearProps: 'transform' // Clear any existing transforms
       });
-
-      // Add to timeline with staggered delay
-      tl.to(layer, {
-        x: 0,
-        opacity: 1,
-        duration: 1,
-        ease: 'power2.out',
-        delay: index * 0.3
-      }, index * 0.2);
-
-      console.log(`Added scroll animation for layer ${index}: ${layer.textContent.trim()}`);
     });
 
-    // Add parallax effect for the focus section
-    gsap.to('.focus-parallax', {
-      y: -100,
-      ease: 'none',
-      scrollTrigger: {
+    // Create individual ScrollTriggers for each layer with staggered timing
+    layers.forEach((layer, index) => {
+      const delay = index * 0.2; // Stagger delay
+      
+      ScrollTrigger.create({
         trigger: this.el,
-        start: 'top bottom',
-        end: 'bottom top',
-        scrub: 1
+        start: `top ${80 - (index * 10)}%`, // Staggered start points
+        end: 'bottom 20%',
+        onEnter: () => {
+          console.log(`Layer ${index} entering: ${layer.textContent.trim()}`);
+          gsap.to(layer, {
+            x: 0,
+            opacity: 1,
+            duration: 0.8,
+            ease: 'power2.out',
+            delay: delay
+          });
+        },
+        onLeave: () => {
+          console.log(`Layer ${index} leaving: ${layer.textContent.trim()}`);
+          gsap.to(layer, {
+            x: '-100vw',
+            opacity: 0,
+            duration: 0.5,
+            ease: 'power2.in'
+          });
+        },
+        onEnterBack: () => {
+          console.log(`Layer ${index} entering back: ${layer.textContent.trim()}`);
+          gsap.to(layer, {
+            x: 0,
+            opacity: 1,
+            duration: 0.8,
+            ease: 'power2.out',
+            delay: delay
+          });
+        },
+        onLeaveBack: () => {
+          console.log(`Layer ${index} leaving back: ${layer.textContent.trim()}`);
+          gsap.to(layer, {
+            x: '100vw',
+            opacity: 0,
+            duration: 0.5,
+            ease: 'power2.in'
+          });
+        }
+      });
+    });
+
+    // Add subtle parallax effect for the focus section background
+    ScrollTrigger.create({
+      trigger: this.el,
+      start: 'top bottom',
+      end: 'bottom top',
+      scrub: 1,
+      onUpdate: (self) => {
+        const progress = self.progress;
+        gsap.set('.focus-parallax', {
+          y: progress * -50 // Subtle parallax effect
+        });
       }
     });
 
