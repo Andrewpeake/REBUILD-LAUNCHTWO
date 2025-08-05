@@ -132,20 +132,30 @@ export class OurFocusSection extends BaseSection {
     // Register ScrollTrigger plugin
     gsap.registerPlugin(ScrollTrigger);
 
+    // Kill any existing ScrollTriggers for this section
+    ScrollTrigger.getAll().forEach(trigger => {
+      if (trigger.vars.trigger === this.el) {
+        trigger.kill();
+      }
+    });
+
     // Set initial positions for all layers (off-screen to the right)
     layers.forEach((layer, index) => {
+      // Force initial position off-screen
       gsap.set(layer, {
         x: '100vw',
         opacity: 0,
         clearProps: 'transform' // Clear any existing transforms
       });
+      
+      console.log(`Set layer ${index} to initial position: x=100vw, opacity=0`);
     });
 
     // Create individual ScrollTriggers for each layer with staggered timing
     layers.forEach((layer, index) => {
       const delay = index * 0.2; // Stagger delay
       
-      ScrollTrigger.create({
+      const trigger = ScrollTrigger.create({
         trigger: this.el,
         start: `top ${80 - (index * 10)}%`, // Staggered start points
         end: 'bottom 20%',
@@ -188,6 +198,8 @@ export class OurFocusSection extends BaseSection {
           });
         }
       });
+      
+      console.log(`Created ScrollTrigger for layer ${index}:`, trigger);
     });
 
     // Add subtle parallax effect for the focus section background
@@ -205,11 +217,44 @@ export class OurFocusSection extends BaseSection {
     });
 
     console.log('Scroll animations setup complete');
+    
+    // Add manual test function to window for debugging
+    window.testFocusAnimations = () => {
+      console.log('Manually testing focus animations...');
+      layers.forEach((layer, index) => {
+        gsap.set(layer, { x: '100vw', opacity: 0 });
+        setTimeout(() => {
+          gsap.to(layer, {
+            x: 0,
+            opacity: 1,
+            duration: 0.8,
+            ease: 'power2.out',
+            delay: index * 0.2
+          });
+        }, 500);
+      });
+    };
+    
+    console.log('Test function available: window.testFocusAnimations()');
   }
 
   // Fallback method to reinitialize on resize
   reinitialize() {
     console.log('Focus section: Reinitializing due to resize');
+    
+    // Reset all layers to off-screen position first
+    const layers = this.el?.querySelectorAll('.focus-layer');
+    if (layers) {
+      layers.forEach((layer, index) => {
+        gsap.set(layer, {
+          x: '100vw',
+          opacity: 0
+        });
+        console.log(`Reset layer ${index} to off-screen position`);
+      });
+    }
+    
+    // Then reinitialize
     this.init();
   }
 }
