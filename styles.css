@@ -405,7 +405,7 @@ section {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  /* Remove the transform that conflicts with GSAP */
   font-size: 3.5rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -430,7 +430,7 @@ section {
 .focus-layer:hover {
   background: rgba(255, 255, 255, 1);
   border-color: rgba(0, 0, 0, 0.1);
-  transform: translate(-50%, -50%) scale(1.02);
+  transform: scale(1.02);
 }
 
 .focus-reveal {

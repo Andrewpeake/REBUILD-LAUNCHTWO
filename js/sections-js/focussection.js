@@ -63,14 +63,22 @@ export class OurFocusSection extends BaseSection {
     console.log('Setting initial positions for all layers');
     
     this.layers.forEach((layer, index) => {
-      // Force initial position off-screen
+      // Set initial centered position and then move off-screen
       gsap.set(layer, {
-        x: '100vw',
+        x: '-50%',  // Center horizontally
+        y: '-50%',  // Center vertically
         opacity: 0,
         clearProps: 'transform'
       });
       
-      console.log(`Layer ${index} set to: x=100vw, opacity=0`);
+      // Then move off-screen to the right
+      gsap.set(layer, {
+        x: '100vw',
+        y: '-50%',  // Keep vertical centering
+        opacity: 0
+      });
+      
+      console.log(`Layer ${index} set to: x=100vw, y=-50%, opacity=0`);
     });
   }
 
@@ -124,7 +132,8 @@ export class OurFocusSection extends BaseSection {
     
     this.layers.forEach((layer, index) => {
       gsap.to(layer, {
-        x: 0,
+        x: '-50%',  // Center horizontally
+        y: '-50%',  // Center vertically
         opacity: 1,
         duration: 0.8,
         ease: 'power2.out',
@@ -139,6 +148,7 @@ export class OurFocusSection extends BaseSection {
     this.layers.forEach((layer, index) => {
       gsap.to(layer, {
         x: '100vw',
+        y: '-50%',  // Keep vertical centering
         opacity: 0,
         duration: 0.5,
         ease: 'power2.in'
