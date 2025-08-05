@@ -89,21 +89,7 @@ section {
 .hero-section {
   height: 100vh;
   position: relative;
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%);
-  overflow: hidden;
-}
-
-.hero-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: 
-    radial-gradient(circle at 20% 80%, rgba(0, 102, 204, 0.03) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(0, 102, 204, 0.03) 0%, transparent 50%);
-  pointer-events: none;
+  background: rgba(255, 255, 255, 0.95);
 }
 
 .hero-title-topleft {
@@ -126,15 +112,15 @@ section {
 }
 
 .hero-logo-img {
-  height: 5rem;
+  height: 3.5rem;
   width: auto;
-  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.08));
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+  transition: all 0.3s ease;
 }
 
 .hero-logo-img:hover {
-  transform: scale(1.08) translateY(-2px);
-  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.12));
+  transform: scale(1.05);
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.15));
 }
 
 .hero-title {
@@ -145,10 +131,6 @@ section {
   margin: 0;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   letter-spacing: -0.02em;
-  background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 
 .hero-sub {
@@ -1330,7 +1312,7 @@ body.site-loaded #site-footer {
 }
 
 .nav-logo-img {
-  height: 1.2rem;
+  height: 1.8rem;
   width: auto;
   transition: transform 0.3s ease;
 }
@@ -1380,7 +1362,7 @@ body.site-loaded #site-footer {
   left: 50%;
   width: 0;
   height: 2px;
-  background: linear-gradient(90deg, #0066cc, #4a90e2);
+  background: #0066cc;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transform: translateX(-50%);
   border-radius: 1px;
@@ -1396,7 +1378,7 @@ body.site-loaded #site-footer {
 }
 
 .nav-links .nav-cta {
-  background: linear-gradient(135deg, #0066cc 0%, #4a90e2 100%);
+  background: #0066cc;
   color: #fff;
   padding: 0.6rem 1.2rem;
   border-radius: 8px;
@@ -1407,7 +1389,7 @@ body.site-loaded #site-footer {
 }
 
 .nav-links .nav-cta:hover {
-  background: linear-gradient(135deg, #0052a3 0%, #3a7bd5 100%);
+  background: #0052a3;
   color: #fff;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 102, 204, 0.4);
@@ -1440,7 +1422,7 @@ body.site-loaded #site-footer {
 
 @media (max-width: 768px) {
   .nav-logo-img {
-    height: 1.2rem;
+    height: 1.5rem;
   }
 
   .nav-logo-text {
@@ -1519,7 +1501,7 @@ body.site-loaded #site-footer {
   }
 
   .hero-logo-img {
-    height: 3.5rem;
+    height: 2.8rem;
   }
 
   .hero-title {
