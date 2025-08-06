@@ -20,6 +20,7 @@ const sectionIds = [
   'team',
   'how-it-works',
   'join',
+  'partnerships',
   'contact'
 ];
 
