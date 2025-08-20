@@ -617,6 +617,7 @@ section {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .team-card:hover {
@@ -690,6 +691,7 @@ section {
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   max-height: 60%;
   overflow-y: auto;
+  z-index: 10;
 }
 
 .team-bio-expanded p {
@@ -702,6 +704,40 @@ section {
 
 .team-card:hover .team-bio-expanded {
   transform: translateY(0);
+}
+
+.team-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  background: #ffffff;
+}
+
+/* Ensure the card link doesn't interfere with hover */
+.team-card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.team-card-link:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Add a subtle indicator for hover */
+.team-card::after {
+  content: "Hover for more";
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  font-size: 0.7rem;
+  color: #999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.team-card:hover::after {
+  opacity: 1;
 }
 
 /* LINKS & ICONS STAY FLEX-BOX INSIDE CARD */
