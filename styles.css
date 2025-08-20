@@ -621,6 +621,8 @@ section {
   position: relative;
   overflow: hidden;
   cursor: pointer;
+  min-height: 380px;
+  max-height: 380px;
 }
 
 .team-card:hover {
@@ -697,6 +699,7 @@ section {
   overflow-y: auto;
   z-index: 10;
   opacity: 0;
+  pointer-events: none;
 }
 
 .team-bio-expanded p {
@@ -710,6 +713,7 @@ section {
 .team-card:hover .team-bio-expanded {
   transform: translateY(0);
   opacity: 1;
+  pointer-events: auto;
 }
 
 .team-card-overlay {
