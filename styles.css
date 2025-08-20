@@ -596,14 +596,17 @@ section {
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 2rem;
   justify-items: center;
-  /* no flex here */
+}
+
+.team-card-wrapper {
+  width: 100%;
+  max-width: 240px;
 }
 
 /* LOCK CARD WIDTH & INTERNAL FLEX FOR CONTENT */
 .team-card {
   box-sizing: border-box;
-  width: 100%;         /* fill the grid cell */
-  max-width: 240px;    /* caps at 240px */
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -612,8 +615,8 @@ section {
   backdrop-filter: blur(10px);
   border-radius: 16px;
   padding: 2rem;
-  height: 400px;       /* fixed height for consistency */
-  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  height: 400px;
+  transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
@@ -621,7 +624,7 @@ section {
 }
 
 .team-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-4px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   background: #ffffff;
 }
@@ -687,11 +690,12 @@ section {
   backdrop-filter: blur(10px);
   padding: 1.5rem;
   transform: translateY(100%);
-  transition: transform 0.3s ease;
+  transition: all 0.3s ease;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   max-height: 60%;
   overflow-y: auto;
   z-index: 10;
+  opacity: 0;
 }
 
 .team-bio-expanded p {
@@ -704,39 +708,39 @@ section {
 
 .team-card:hover .team-bio-expanded {
   transform: translateY(0);
+  opacity: 1;
 }
 
-.team-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  background: #ffffff;
-}
-
-/* Ensure the card link doesn't interfere with hover */
-.team-card-link {
-  text-decoration: none;
-  color: inherit;
-}
-
-.team-card-link:hover {
-  text-decoration: none;
-  color: inherit;
-}
-
-/* Add a subtle indicator for hover */
-.team-card::after {
-  content: "Hover for more";
+.team-card-overlay {
   position: absolute;
-  bottom: 0.5rem;
-  right: 0.5rem;
-  font-size: 0.7rem;
-  color: #999;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
   opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
+  transition: all 0.3s ease;
+  z-index: 20;
 }
 
-.team-card:hover::after {
+.team-bio-link {
+  display: inline-block;
+  background: #0066cc;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.team-bio-link:hover {
+  background: #0052a3;
+  transform: translateY(-2px);
+  text-decoration: none;
+  color: white;
+}
+
+.team-card:hover .team-card-overlay {
   opacity: 1;
 }
 
@@ -763,19 +767,7 @@ section {
   fill: #ffffff;
   transform: scale(1.15);
 }
-.team-card-link {
-  text-decoration: none;
-  color: inherit;
-  display: block;
-  width: 100%;
-  max-width: 240px;
-}
 
-.team-card-link:hover .team-card {
-  transform: translateY(-6px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  background: #ffffff;
-}
 
 /* === How It Works Section === */
 .how-it-works-section {
