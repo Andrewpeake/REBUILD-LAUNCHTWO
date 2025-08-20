@@ -615,14 +615,14 @@ section {
   backdrop-filter: blur(10px);
   border-radius: 16px;
   padding: 2rem;
-  height: 400px;
+  height: 420px;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
   cursor: pointer;
-  min-height: 400px;
-  max-height: 400px;
+  min-height: 420px;
+  max-height: 420px;
 }
 
 .team-card:hover {
@@ -679,8 +679,8 @@ section {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  min-height: 80px;
-  max-height: 80px;
+  min-height: 100px;
+  max-height: 100px;
   overflow: hidden;
   line-height: 1.4;
 }
