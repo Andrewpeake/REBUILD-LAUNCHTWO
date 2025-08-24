@@ -3,8 +3,8 @@ html, body {
   margin: 0;
   padding: 0;
   font-family: 'Inter', sans-serif;
-  background: #ffffff;
-  height: 100%;
+  background: transparent;
+  min-height: 100vh;
   overflow-x: hidden;
   color: #000000;
   -webkit-text-size-adjust: 100%;
@@ -29,13 +29,13 @@ section {
 }
 
 #team {
-  padding-top: 40rem;
-  margin-top: 40rem;
+  padding-top: 6rem;
+  margin-top: 4rem;
 }
 
 #join {
-  padding-top: 40rem;
-  margin-top: 40rem;
+  padding-top: 6rem;
+  margin-top: 4rem;
 }
 
 #focus h2,
@@ -52,7 +52,7 @@ section {
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 0;
+  z-index: -1;
   pointer-events: none;
   background: transparent;
 }
@@ -89,7 +89,7 @@ section {
 .hero-section {
   height: 100vh;
   position: relative;
-  background: rgba(255, 255, 255, 0.95);
+  background: transparent;
 }
 
 .hero-title-topleft {
@@ -395,11 +395,11 @@ section {
 .focus-reveal {
   position: absolute;
   left: 50%;
-  bottom: -80px;
-  transform: translateX(-50%) translateY(10px);
+  bottom: -10px; /* Position relative to the bottom */
+  transform: translateX(-50%) translateY(100%); /* Center and move it down */
   width: 100%;
   padding: 1.5rem;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.98); /* Slightly more opaque */
   backdrop-filter: blur(12px);
   font-size: 1rem;
   font-weight: normal;
@@ -407,7 +407,8 @@ section {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  /* Faster, smoother animation */
+  transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
   border-radius: 1rem;
   border: 1px solid rgba(0, 0, 0, 0.05);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
@@ -417,20 +418,12 @@ section {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-  transform: translateX(-50%) translateY(0);
+  transform: translateX(-50%) translateY(calc(100% + 25px)); /* Final position */
 }
 
-.focus-reveal p {
-  margin: 0;
-  color: #000;
-  line-height: 1.6;
-  font-size: 0.95rem;
-  letter-spacing: 0.02em;
-}
-
-.focus-layer:nth-child(1) { top: 30%; }
+.focus-layer:nth-child(1) { top: 15%; }
 .focus-layer:nth-child(2) { top: 50%; }
-.focus-layer:nth-child(3) { top: 70%; }
+.focus-layer:nth-child(3) { top: 85%; }
 
 /* === Safari-specific fixes === */
 @supports (-webkit-touch-callout: none) {
@@ -580,14 +573,13 @@ section {
 .team-title {
   font-size: 3rem;
   font-weight: 700;
-  margin-bottom: 20rem;
-  padding-bottom: 10rem;
+  margin-bottom: 4rem;
 }
 
 .team-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 10rem 1rem 0;
+  padding: 0 1rem;
 }
 
 /* SWITCH TO GRID FOR ABSOLUTE NON-OVERLAP */
@@ -2181,29 +2173,6 @@ body.site-loaded #site-footer {
   }
 }
 
-/* === Mobile Base Styles === */
-html.mobile,
-body.mobile {
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: none;
-  touch-action: manipulation;
-  height: 100%;
-  width: 100%;
-  position: fixed;
-  overflow: hidden;
-}
-
-body.mobile #main-container {
-  height: 100%;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-
 /* === Mobile Touch Optimization === */
 @media (hover: none) {
   .focus-layer,
@@ -2275,9 +2244,109 @@ body.mobile #main-container {
   }
 }
 
+/* =================================================================== */
+/* H. ROBUST MOBILE & TABLET OPTIMIZATIONS
+/* =================================================================== */
+/* These rules override the desktop styles for screens 768px or less
+   to create a clean, well-spaced, and functional mobile experience. */
+@media (max-width: 768px) {
 
+  /* --- General Spacing & Typography --- */
+  section {
+    padding: 3rem 1.5rem; /* Reduces side padding on mobile */
+  }
+  .scroll-section + .scroll-section {
+    margin-top: 2rem; /* Reduces space between sections */
+  }
 
+  /* --- Hero Section --- */
+  .hero-title-topleft {
+    padding: 0 1.5rem; /* Adjust padding for mobile */
+    width: calc(100% - 3rem);
+    top: 25%; /* Lower the text a bit on the screen */
+  }
+  .hero-title {
+    font-size: 3rem; /* Make title smaller for phones */
+    line-height: 1.1;
+  }
+  .hero-sub {
+    font-size: 1.25rem; /* Adjust subtitle size */
+  }
 
+  /* --- AAM & About Sections --- */
+  .aam-split {
+    flex-direction: column; /* Stack the columns vertically */
+    gap: 3rem;
+  }
+  .aam-title {
+    white-space: normal; /* Allow title to wrap */
+  }
+  .aam-stacked-right {
+    margin-top: 1rem;
+    padding-right: 0;
+    align-items: center;
+    text-align: center;
+  }
+  .aam-item {
+    font-size: 1.8rem;
+  }
+  .aam-details {
+    text-align: center;
+  }
 
+  /* --- Focus Section --- */
+  .focus-parallax {
+    gap: 1.5rem; /* Reduce gap between focus blocks */
+    padding: 0;
+  }
+  .focus-layer {
+    position: relative; /* Make layers static instead of absolute */
+    top: auto;
+    left: auto;
+    transform: none;
+    width: 100%;
+    font-size: 1.5rem;
+    padding: 1.5rem;
+  }
+  .focus-layer:hover {
+    transform: none;
+  }
+  .focus-reveal {
+    position: relative; /* Ensure reveal text is part of the flow */
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0 0.5rem;
+  }
+  .focus-layer.active .focus-reveal {
+    margin-top: 1rem;
+  }
 
+  /* --- Team & Join Section Spacing --- */
+  #team, #join {
+    padding-top: 4rem;
+    margin-top: 2rem;
+  }
+  .team-title {
+    margin-bottom: 2rem; /* Further reduce space for mobile */
+  }
+  .team-container {
+    padding: 0;
+  }
 
+  /* --- Contact / Footer Section --- */
+  .contact-grid {
+    grid-template-columns: 1fr; /* Force a single column layout */
+    gap: 2rem;
+    text-align: center; /* Center-align all text content */
+  }
+  .contact-block {
+    text-align: center; /* Ensure each block's content is centered */
+  }
+  .contact-form {
+    align-items: center; /* Center the form button */
+  }
+  .contact-form label {
+    width: 100%; /* Ensure labels take full width */
+  }
+}

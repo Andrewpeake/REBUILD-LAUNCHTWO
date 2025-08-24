@@ -12,6 +12,9 @@ import { initNavigation } from './navigation.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
+gsap.config({ trialWarn: false }); // Optional: Silences a GSAP trial warning in the console
+ScrollTrigger.normalizeScroll(true); // The magic line for smooth scrolling!
+
 const sectionIds = [
   'home',
   'whatisaam',
@@ -35,27 +38,12 @@ const performanceMetrics = {
 
 // Safari detection
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-const isMobile = () => {
-  return (
-    window.innerWidth <= 768 ||
-    navigator.maxTouchPoints > 0 ||
-    navigator.msMaxTouchPoints > 0 ||
-    ('ontouchstart' in window) ||
-    (window.DocumentTouch && document instanceof DocumentTouch)
-  );
-};
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
     // Add Safari class if needed
     if (isSafari) {
       document.documentElement.classList.add('safari');
-    }
-    
-    // Add mobile class if needed
-    if (isMobile()) {
-      document.documentElement.classList.add('mobile');
-      document.body.classList.add('mobile');
     }
 
     // Initialize performance monitoring
@@ -71,17 +59,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Initialize tesseract with error handling and mobile optimization
+    // Replace the block above with this one
     try {
       console.log('Starting tesseract initialization...');
-      if (!isMobile()) {
-        initTesseract();
-      } else {
-        // Simplified background for mobile
-        const canvas = document.getElementById('tesseract-bg');
-        if (canvas) {
-          canvas.style.display = 'none';
-        }
-      }
+      initTesseract(); // Always initialize the animation
       console.log('Tesseract initialized successfully');
     } catch (error) {
       console.error('Error initializing tesseract:', error);
@@ -208,52 +189,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     ScrollTrigger.defaults({ markers: false });
+
+    // Give the browser a moment to render before refreshing ScrollTrigger
+    setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 100); // 100ms delay
+
     ScrollTrigger.refresh();
-
-    // Update focus section handling for Safari
-    const setupFocusSection = () => {
-      const focusLayers = document.querySelectorAll('.focus-layer');
-      
-      focusLayers.forEach(layer => {
-        layer.addEventListener('touchstart', function(e) {
-          if (isMobile()) {
-            e.preventDefault();
-            focusLayers.forEach(l => {
-              if (l !== layer) l.classList.remove('active');
-            });
-            layer.classList.toggle('active');
-          }
-        }, { passive: false });
-
-        // Add click handler for non-touch devices
-        layer.addEventListener('click', function(e) {
-          if (!isMobile()) {
-            focusLayers.forEach(l => {
-              if (l !== layer) l.classList.remove('active');
-            });
-            layer.classList.toggle('active');
-          }
-        });
-      });
-    };
-
-    setupFocusSection();
-
-    // Update mobile status on resize with debouncing
-    let resizeTimer;
-    window.addEventListener('resize', () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        const wasMobile = document.documentElement.classList.contains('mobile');
-        const isMobileNow = isMobile();
-        
-        if (wasMobile !== isMobileNow) {
-          document.documentElement.classList.toggle('mobile', isMobileNow);
-          document.body.classList.toggle('mobile', isMobileNow);
-          setupFocusSection();
-        }
-      }, 250);
-    }, { passive: true });
 
     // Final performance mark
     performance.mark('app-init-end');
