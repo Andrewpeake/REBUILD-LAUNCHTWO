@@ -27,7 +27,7 @@ A modern, responsive website for the Urban Air Mobility team at the University o
 ├── index.html              # Main entry point
 ├── styles.css             # Global styles
 ├── js/                    # JavaScript modules
-│   ├── LIFTUCalgary.js   # Main JavaScript entry
+│   ├── UAMUCalgary.js   # Main JavaScript entry
 │   ├── navigation.js     # Navigation functionality
 │   ├── tesseract.js      # Background animation
 │   ├── intro.js          # Intro animation
