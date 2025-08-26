@@ -2013,7 +2013,6 @@ body.site-loaded #site-footer {
   .team-links {
     justify-content: center;
   }
-}
 
 /* === Join Section Mobile === */
 @media (max-width: 768px) {

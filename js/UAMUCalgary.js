@@ -45,6 +45,17 @@ const performanceMetrics = {
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
 document.addEventListener('DOMContentLoaded', async () => {
+
+  let scrollTimeout;
+  window.addEventListener('scroll', () => {
+    window.tesseractAnimation.pause();
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => {
+      window.tesseractAnimation.resume();
+    }, 150); // Resume animation after 150ms of no scrolling
+  }, { passive: true });
+
+
   try {
     // Add Safari class if needed
     if (isSafari) {
@@ -226,8 +237,5 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.body.appendChild(errorOverlay);
   }
 });
-
-
-
 
 
