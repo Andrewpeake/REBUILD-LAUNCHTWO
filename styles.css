@@ -927,29 +927,54 @@ section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  min-width: 120px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  min-width: 210px;
+  min-height: 90px;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  overflow: hidden;
+}
+
+.partner-logo-small::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  border-radius: 16px;
+  pointer-events: none;
+}
+
+.partner-link {
+  cursor: pointer;
 }
 
 .partner-logo-small:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-  background: #ffffff;
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .partner-logo-img-small {
-  width: 60px;
-  height: 60px;
+  width: 112px;
+  height: 112px;
   object-fit: contain;
   filter: grayscale(0%);
   transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
 }
 
 .partner-logo-small:hover .partner-logo-img-small {
@@ -984,45 +1009,35 @@ section {
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .partners-row {
-    gap: 1rem;
+    gap: 1.5rem;
   }
   
   .partner-logo-small {
-    min-width: 100px;
-    padding: 0.75rem;
+    min-width: 165px;
+    min-height: 75px;
+    padding: 1.125rem;
   }
   
-  .partner-logo-img-small,
-  .partner-logo-placeholder {
-    width: 50px;
-    height: 50px;
-  }
-  
-  .partner-name-small {
-    font-size: 0.75rem;
-    max-width: 80px;
+  .partner-logo-img-small {
+    width: 90px;
+    height: 90px;
   }
 }
 
 @media (max-width: 480px) {
   .partners-row {
-    gap: 0.75rem;
+    gap: 1rem;
   }
   
   .partner-logo-small {
-    min-width: 80px;
-    padding: 0.5rem;
+    min-width: 135px;
+    min-height: 67px;
+    padding: 0.9375rem;
   }
   
-  .partner-logo-img-small,
-  .partner-logo-placeholder {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .partner-name-small {
-    font-size: 0.7rem;
-    max-width: 70px;
+  .partner-logo-img-small {
+    width: 75px;
+    height: 75px;
   }
 }
 
