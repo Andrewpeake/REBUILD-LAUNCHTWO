@@ -981,6 +981,30 @@ section {
   transform: scale(1.05);
 }
 
+.su-logo {
+  width: 146px !important;
+  height: 146px !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important;
+}
+
+.caam-logo {
+  width: 146px !important;
+  height: 146px !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important;
+}
+
+.uofc-logo {
+  width: 146px !important;
+  height: 146px !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important;
+}
+
 .partner-logo-placeholder {
   width: 60px;
   height: 60px;
@@ -1022,6 +1046,30 @@ section {
     width: 90px;
     height: 90px;
   }
+  
+  .su-logo {
+    width: 117px !important;
+    height: 117px !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: contain !important;
+  }
+  
+  .caam-logo {
+    width: 117px !important;
+    height: 117px !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: contain !important;
+  }
+  
+  .uofc-logo {
+    width: 117px !important;
+    height: 117px !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: contain !important;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1038,6 +1086,30 @@ section {
   .partner-logo-img-small {
     width: 75px;
     height: 75px;
+  }
+  
+  .su-logo {
+    width: 98px !important;
+    height: 98px !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: contain !important;
+  }
+  
+  .caam-logo {
+    width: 98px !important;
+    height: 98px !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: contain !important;
+  }
+  
+  .uofc-logo {
+    width: 98px !important;
+    height: 98px !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: contain !important;
   }
 }
 
