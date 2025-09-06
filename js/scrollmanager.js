@@ -21,6 +21,49 @@ export class ScrollManager {
 
   init() {
     this.sections.forEach(section => section.init());
+    
+    // Track section visibility
+    this.setupSectionTracking();
+  }
+
+  setupSectionTracking() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const sectionId = entry.target.id;
+          const sectionName = entry.target.querySelector('h1, h2, h3')?.textContent || sectionId;
+          
+          // Track section view
+          if (window.uamAnalytics) {
+            window.uamAnalytics.trackEvent('section_view', 'engagement', 'view', sectionName, null, {
+              sectionId: sectionId,
+              sectionName: sectionName,
+              viewportHeight: window.innerHeight,
+              scrollPosition: window.pageYOffset,
+              timestamp: Date.now()
+            });
+          }
+          
+          // Track with app state
+          if (window.uamAppState) {
+            window.uamAppState.trackInteraction('section_view', {
+              sectionId: sectionId,
+              sectionName: sectionName
+            });
+          }
+        }
+      });
+    }, {
+      threshold: 0.5 // Trigger when 50% of section is visible
+    });
+
+    // Observe all sections
+    this.sections.forEach(section => {
+      const element = document.getElementById(section.id);
+      if (element) {
+        observer.observe(element);
+      }
+    });
   }
 }
 
