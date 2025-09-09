@@ -259,6 +259,11 @@ export class Analytics {
   }
 
   async sendData(endpoint, data, useBeacon = false) {
+    // Skip if analytics is disabled
+    if (!this.analyticsEndpoint) {
+      return;
+    }
+    
     const url = this.analyticsEndpoint + endpoint;
     
     if (useBeacon && 'sendBeacon' in navigator) {

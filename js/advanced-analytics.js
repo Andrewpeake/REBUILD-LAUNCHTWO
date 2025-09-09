@@ -199,6 +199,31 @@ export class AdvancedAnalytics {
     });
   }
 
+  getCountryFromLanguage(language) {
+    // Simple mapping of language codes to countries
+    const languageToCountry = {
+      'en': 'US',
+      'en-US': 'US',
+      'en-CA': 'CA',
+      'en-GB': 'GB',
+      'fr': 'FR',
+      'fr-CA': 'CA',
+      'es': 'ES',
+      'de': 'DE',
+      'it': 'IT',
+      'pt': 'PT',
+      'ru': 'RU',
+      'ja': 'JP',
+      'ko': 'KR',
+      'zh': 'CN',
+      'ar': 'SA'
+    };
+    
+    // Extract base language code
+    const baseLang = language.split('-')[0];
+    return languageToCountry[language] || languageToCountry[baseLang] || 'Unknown';
+  }
+
   trackGeographicInfo() {
     // This would typically use a geolocation service
     // For now, we'll track what we can from the browser
@@ -933,6 +958,11 @@ export class AdvancedAnalytics {
 
   // ===== DATA SENDING =====
   async sendData(endpoint, data, useBeacon = false) {
+    // Skip if analytics is disabled
+    if (!this.analyticsEndpoint) {
+      return;
+    }
+    
     const url = this.analyticsEndpoint + endpoint;
     
     if (useBeacon && 'sendBeacon' in navigator) {

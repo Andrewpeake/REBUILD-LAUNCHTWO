@@ -5,18 +5,18 @@
 
 window.UAMAnalyticsConfig = {
     // Server Configuration
-    endpoint: 'http://10.0.0.124:3001/api/analytics',
+    endpoint: null, // Disabled for production
     siteName: 'UAM UCalgary',
     version: '1.0.0',
     
     // Tracking Configuration
-    trackPageViews: true,
-    trackClicks: true,
-    trackScroll: true,
-    trackForms: true,
-    trackPerformance: true,
-    trackErrors: true,
-    trackUAMInteractions: true,
+    trackPageViews: false, // Disabled for production
+    trackClicks: false,
+    trackScroll: false,
+    trackForms: false,
+    trackPerformance: false,
+    trackErrors: false,
+    trackUAMInteractions: false,
     
     // UAM-Specific Tracking
     uamSections: [
