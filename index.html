@@ -20,9 +20,6 @@
   
   <!-- UAM Analytics Configuration -->
   <script src="js/analytics-config.js"></script>
-  
-  <!-- UAM Analytics Tracking -->
-  <script src="http://10.0.0.124:3001/uam-analytics.js"></script>
 </head>
 <body>
   <!-- Background Tesseract Canvas -->
@@ -78,8 +75,8 @@
         item.classList.toggle('active');
         
         // Track AAM item interaction
-        if (window.analytics) {
-          window.analytics.trackEvent('aam_item_interaction', 'engagement', 'click', item.id || 'unknown', null, {
+        if (window.uamAnalytics) {
+          window.uamAnalytics.trackEvent('aam_item_interaction', 'engagement', 'click', item.id || 'unknown', null, {
             itemId: item.id || 'unknown',
             itemText: item.textContent || ''
           });
@@ -96,8 +93,8 @@
       navLinks.classList.toggle('active');
       
       // Track mobile menu toggle
-      if (window.analytics) {
-        window.analytics.trackEvent('mobile_menu_toggle', 'navigation', 'toggle', 'mobile_menu', null, {
+      if (window.uamAnalytics) {
+        window.uamAnalytics.trackEvent('mobile_menu_toggle', 'navigation', 'toggle', 'mobile_menu', null, {
           isOpen: navLinks.classList.contains('active')
         });
       }
@@ -135,8 +132,8 @@
           layer.classList.toggle('active');
           
           // Track focus layer interaction
-          if (window.analytics) {
-            window.analytics.trackEvent('focus_layer_interaction', 'engagement', 'click', layer.id || 'unknown', null, {
+          if (window.uamAnalytics) {
+            window.uamAnalytics.trackEvent('focus_layer_interaction', 'engagement', 'click', layer.id || 'unknown', null, {
               layerId: layer.id || 'unknown',
               isActive: layer.classList.contains('active')
             });
