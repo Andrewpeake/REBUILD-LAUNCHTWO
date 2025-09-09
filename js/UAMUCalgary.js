@@ -351,6 +351,7 @@ function setupUAMInteractions() {
           isInternal: href.startsWith('#')
         });
       }
+    }
   });
 
   // Track focus layer interactions
