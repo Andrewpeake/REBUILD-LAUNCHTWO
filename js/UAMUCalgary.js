@@ -366,6 +366,7 @@ function setupUAMInteractions() {
           isActive: layer.classList.contains('active')
         });
       }
+    }
   });
 
   // Track team member interactions
@@ -380,6 +381,7 @@ function setupUAMInteractions() {
           elementType: element.tagName
         });
       }
+    }
   });
 
   // Track partnership interactions
@@ -394,6 +396,7 @@ function setupUAMInteractions() {
           elementType: element.tagName
         });
       }
+    }
   });
 
   // Track CTA button clicks
@@ -408,6 +411,7 @@ function setupUAMInteractions() {
           buttonClass: button.className
         });
       }
+    }
   });
 }
 
@@ -438,6 +442,7 @@ function setupFormTracking() {
           formId: e.target.closest('form')?.id
         });
       }
+    }
   });
 }
 
@@ -452,7 +457,8 @@ function setupMediaTracking() {
           videoSrc: video.src,
           videoDuration: video.duration
         });
-      });
+      }
+    });
 
     video.addEventListener('pause', () => {
       if (analytics) {
@@ -461,7 +467,8 @@ function setupMediaTracking() {
           currentTime: video.currentTime,
           duration: video.duration
         });
-      });
+      }
+    });
   });
 
   // Track image interactions
