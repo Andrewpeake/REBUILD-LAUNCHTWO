@@ -368,6 +368,32 @@ class Database {
         expires_at DATETIME,
         applied BOOLEAN DEFAULT 0,
         custom_attributes TEXT
+      )`,
+
+      // Users table for authentication
+      `CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT UNIQUE NOT NULL,
+        password_hash TEXT NOT NULL,
+        email TEXT,
+        role TEXT DEFAULT 'admin',
+        is_active BOOLEAN DEFAULT 1,
+        last_login DATETIME,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )`,
+
+      // User sessions for tracking active sessions
+      `CREATE TABLE IF NOT EXISTS auth_sessions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        session_token TEXT UNIQUE NOT NULL,
+        ip_address TEXT,
+        user_agent TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        expires_at DATETIME NOT NULL,
+        is_active BOOLEAN DEFAULT 1,
+        FOREIGN KEY (user_id) REFERENCES users (id)
       )`
     ];
 
@@ -429,6 +455,63 @@ class Database {
         }
       });
     });
+  }
+
+  // User management methods
+  async createUser(username, passwordHash, email = null, role = 'admin') {
+    const sql = `
+      INSERT INTO users (username, password_hash, email, role)
+      VALUES (?, ?, ?, ?)
+    `;
+    return this.run(sql, [username, passwordHash, email, role]);
+  }
+
+  async getUserByUsername(username) {
+    const sql = 'SELECT * FROM users WHERE username = ? AND is_active = 1';
+    return this.get(sql, [username]);
+  }
+
+  async getUserById(id) {
+    const sql = 'SELECT * FROM users WHERE id = ? AND is_active = 1';
+    return this.get(sql, [id]);
+  }
+
+  async updateLastLogin(userId) {
+    const sql = 'UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = ?';
+    return this.run(sql, [userId]);
+  }
+
+  async createAuthSession(userId, sessionToken, ipAddress, userAgent, expiresAt) {
+    const sql = `
+      INSERT INTO auth_sessions (user_id, session_token, ip_address, user_agent, expires_at)
+      VALUES (?, ?, ?, ?, ?)
+    `;
+    return this.run(sql, [userId, sessionToken, ipAddress, userAgent, expiresAt]);
+  }
+
+  async getAuthSession(sessionToken) {
+    const sql = `
+      SELECT s.*, u.username, u.role 
+      FROM auth_sessions s 
+      JOIN users u ON s.user_id = u.id 
+      WHERE s.session_token = ? AND s.is_active = 1 AND s.expires_at > CURRENT_TIMESTAMP
+    `;
+    return this.get(sql, [sessionToken]);
+  }
+
+  async deactivateAuthSession(sessionToken) {
+    const sql = 'UPDATE auth_sessions SET is_active = 0 WHERE session_token = ?';
+    return this.run(sql, [sessionToken]);
+  }
+
+  async deactivateAllUserSessions(userId) {
+    const sql = 'UPDATE auth_sessions SET is_active = 0 WHERE user_id = ?';
+    return this.run(sql, [userId]);
+  }
+
+  async cleanupExpiredSessions() {
+    const sql = 'UPDATE auth_sessions SET is_active = 0 WHERE expires_at < CURRENT_TIMESTAMP';
+    return this.run(sql);
   }
 
   close() {

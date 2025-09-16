@@ -5,10 +5,14 @@ const rateLimit = require('express-rate-limit');
 const compression = require('compression');
 const morgan = require('morgan');
 const path = require('path');
+const session = require('express-session');
+const SQLiteStore = require('connect-sqlite3')(session);
 const Database = require('./database/database');
 const AnalyticsRoutes = require('./routes/analytics');
 const EnhancedAnalyticsRoutes = require('./routes/enhanced-analytics');
 const DashboardRoutes = require('./routes/dashboard');
+const AuthRoutes = require('./routes/auth');
+const authMiddleware = require('./middleware/auth');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -49,6 +53,22 @@ app.use(cors({
 app.use(compression());
 app.use(morgan('combined'));
 
+// Session configuration
+app.use(session({
+  store: new SQLiteStore({
+    db: 'sessions.db',
+    dir: './database'
+  }),
+  secret: process.env.SESSION_SECRET || 'uam-analytics-session-secret-2024',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
+}));
+
 // Body parsing
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
@@ -62,10 +82,18 @@ db.init().then(() => {
   process.exit(1);
 });
 
-// Routes
-app.use('/api/analytics', AnalyticsRoutes);
-app.use('/api/analytics', EnhancedAnalyticsRoutes);
-app.use('/dashboard', DashboardRoutes);
+// Public routes (no authentication required)
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
+// Authentication routes
+app.use('/api/auth', AuthRoutes);
+
+// Protected routes (authentication required)
+app.use('/api/analytics', authMiddleware.verifyToken, AnalyticsRoutes);
+app.use('/api/analytics', authMiddleware.verifyToken, EnhancedAnalyticsRoutes);
+app.use('/dashboard', authMiddleware.checkAuth, DashboardRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
