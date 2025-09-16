@@ -5,10 +5,6 @@ export class AppState {
       loadedSections: new Set(),
       isLoading: false,
       errors: [],
-      analytics: {
-        pageViews: {},
-        interactions: []
-      }
     };
     
     this._listeners = new Set();
@@ -59,30 +55,9 @@ export class AppState {
     this.setState({ errors: [] });
   }
 
-  // Analytics
-  trackPageView(sectionId) {
-    const pageViews = {
-      ...this._state.analytics.pageViews,
-      [sectionId]: (this._state.analytics.pageViews[sectionId] || 0) + 1
-    };
-    this.setState({
-      analytics: {
-        ...this._state.analytics,
-        pageViews
-      }
-    });
-  }
-
+  // Track interactions (simplified without analytics)
   trackInteraction(type, data) {
-    const interactions = [
-      ...this._state.analytics.interactions,
-      { type, data, timestamp: new Date().toISOString() }
-    ];
-    this.setState({
-      analytics: {
-        ...this._state.analytics,
-        interactions
-      }
-    });
+    // Simple interaction tracking without external analytics
+    console.log('Interaction:', type, data);
   }
 } 
