@@ -1,6 +1,12 @@
 // Cache for loaded section content
 const sectionCache = new Map();
 
+// Function to clear section cache
+export function clearSectionCache() {
+  sectionCache.clear();
+  console.log('Section cache cleared');
+}
+
 // Preload queue
 const preloadQueue = new Set();
 let isPreloading = false;
@@ -28,7 +34,9 @@ async function preloadSections() {
 // Fetch section content
 async function fetchSection(id) {
   try {
-    const res = await fetch(`sections-html/${id}.html`);
+    // Add cache-busting parameter to ensure fresh content
+    const timestamp = Date.now();
+    const res = await fetch(`sections-html/${id}.html?v=${timestamp}`);
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
     return await res.text();
   } catch (error) {
@@ -70,8 +78,8 @@ export async function loadSections(sectionIds) {
     try {
       let html;
       
-      // Check cache first
-      if (sectionCache.has(id)) {
+      // Check cache first (skip cache for about section to ensure fresh content)
+      if (sectionCache.has(id) && id !== 'about') {
         html = sectionCache.get(id);
       } else {
         html = await fetchSection(id);
