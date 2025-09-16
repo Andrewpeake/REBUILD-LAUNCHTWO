@@ -14,9 +14,6 @@ import { loadSections, preloadSection } from './sectionloader.js';
 import { ScrollManager } from './scrollmanager.js';
 import { AppState } from './state.js';
 import { initNavigation } from './navigation.js';
-import { Analytics } from './analytics.js';
-import { AdvancedAnalytics } from './advanced-analytics.js';
-import './analytics-config.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -35,20 +32,8 @@ const sectionIds = [
   'contact'
 ];
 
-// Initialize app state and analytics
+// Initialize app state
 const appState = new AppState();
-
-// Conditionally initialize analytics only if enabled
-let analytics = null;
-let advancedAnalytics = null;
-
-if (window.UAMAnalyticsConfig && window.UAMAnalyticsConfig.endpoint) {
-  analytics = new Analytics();
-  advancedAnalytics = new AdvancedAnalytics();
-  // Make analytics globally available
-  window.uamAnalytics = analytics;
-}
-window.uamAdvancedAnalytics = advancedAnalytics;
 window.uamAppState = appState;
 
 // Add performance monitoring
@@ -62,13 +47,6 @@ const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
 document.addEventListener('DOMContentLoaded', async () => {
   // Track page load start
-  if (analytics) {
-    analytics.trackEvent('page_load_start', 'performance', 'load', 'main_page', null, {
-      url: window.location.href,
-      referrer: document.referrer,
-      userAgent: navigator.userAgent
-    });
-  }
 
   let scrollTimeout;
   window.addEventListener('scroll', () => {
@@ -81,9 +59,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Track scroll depth
     const scrollDepth = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
     if (scrollDepth % 25 === 0 && scrollDepth > 0) {
-      if (analytics) {
-        analytics.trackEvent('scroll_milestone', 'engagement', 'scroll', `${Math.round(scrollDepth)}%`, scrollDepth);
-      }
     }
   }, { passive: true });
 
@@ -137,13 +112,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         appState.setLoading(false);
         
         // Track section loading performance
-        if (analytics) {
-          analytics.trackEvent('sections_loaded', 'performance', 'load', 'all_sections', sectionLoadTime, {
-            sectionCount: loadedSections.size,
-            loadTime: sectionLoadTime,
-            sections: Array.from(loadedSections)
-          });
-        }
         
         performance.mark('sections-load-end');
         performance.measure('sections-load', 'sections-load-start', 'sections-load-end');
@@ -191,13 +159,6 @@ document.addEventListener('DOMContentLoaded', async () => {
           loadTime: performance.now() - performanceMetrics.startTime
         });
 
-        // Track analytics event
-        if (analytics) {
-          analytics.trackEvent('site_loaded', 'performance', 'load', 'main_site', performance.now() - performanceMetrics.startTime, {
-            loadedSections: Array.from(loadedSections),
-            loadTime: performance.now() - performanceMetrics.startTime
-          });
-        }
 
         // Set up comprehensive click tracking
         setupClickTracking();
@@ -240,12 +201,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             itemId: item.id || 'unknown'
           });
 
-          // Track analytics event
-          if (analytics) {
-            analytics.trackEvent('aam_item_click', 'engagement', 'click', item.id || 'unknown', null, {
-              itemId: item.id || 'unknown'
-            });
-          }
 
           document.querySelectorAll('.aam-details').forEach(detail => {
             detail.style.maxHeight = '0px';
@@ -294,10 +249,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       error: error.message
     });
 
-    // Track critical error in analytics
-    if (analytics) {
-      analytics.trackError('critical_error', error.message, error.stack);
-    }
     
     // Show error message to user
     const errorOverlay = document.createElement('div');
@@ -329,9 +280,6 @@ function setupClickTracking() {
       timestamp: Date.now()
     };
 
-    if (analytics) {
-      analytics.trackEvent('click', 'engagement', 'click', element.tagName.toLowerCase(), null, clickData);
-    }
   });
 }
 
@@ -344,13 +292,6 @@ function setupUAMInteractions() {
       const href = link.getAttribute('href');
       const text = link.textContent.trim();
       
-      if (analytics) {
-        analytics.trackEvent('navigation_click', 'navigation', 'click', text, null, {
-          href: href,
-          section: href.replace('#', ''),
-          isInternal: href.startsWith('#')
-        });
-      }
     }
   });
 
@@ -360,12 +301,6 @@ function setupUAMInteractions() {
       const layer = e.target.closest('.focus-layer');
       const layerId = layer.id || 'unknown';
       
-      if (analytics) {
-        analytics.trackEvent('focus_layer_click', 'engagement', 'click', layerId, null, {
-          layerId: layerId,
-          isActive: layer.classList.contains('active')
-        });
-      }
     }
   });
 
@@ -375,12 +310,6 @@ function setupUAMInteractions() {
       const element = e.target.closest('.team-member') || e.target.closest('[href*="bios/"]');
       const memberName = element.textContent.trim();
       
-      if (analytics) {
-        analytics.trackEvent('team_member_click', 'engagement', 'click', memberName, null, {
-          memberName: memberName,
-          elementType: element.tagName
-        });
-      }
     }
   });
 
@@ -390,12 +319,6 @@ function setupUAMInteractions() {
       const element = e.target.closest('.partnership') || e.target.closest('[href*="partnership"]');
       const partnerName = element.textContent.trim();
       
-      if (analytics) {
-        analytics.trackEvent('partnership_click', 'engagement', 'click', partnerName, null, {
-          partnerName: partnerName,
-          elementType: element.tagName
-        });
-      }
     }
   });
 
@@ -405,12 +328,6 @@ function setupUAMInteractions() {
       const button = e.target.closest('.cta') || e.target.closest('.button') || e.target.closest('.btn');
       const buttonText = button.textContent.trim();
       
-      if (analytics) {
-        analytics.trackEvent('cta_click', 'conversion', 'click', buttonText, null, {
-          buttonText: buttonText,
-          buttonClass: button.className
-        });
-      }
     }
   });
 }
@@ -422,26 +339,11 @@ function setupFormTracking() {
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
     
-    if (analytics) {
-      analytics.trackEvent('form_submit', 'engagement', 'submit', form.id || 'unknown', 1, {
-        formId: form.id,
-        formAction: form.action,
-        fieldCount: form.elements.length,
-        formData: Object.keys(data)
-      });
-    }
   });
 
   // Track form field interactions
   document.addEventListener('focus', (e) => {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
-      if (analytics) {
-        analytics.trackEvent('form_field_focus', 'engagement', 'focus', e.target.name || 'unknown', null, {
-          fieldName: e.target.name,
-          fieldType: e.target.type,
-          formId: e.target.closest('form')?.id
-        });
-      }
     }
   });
 }
@@ -451,37 +353,15 @@ function setupMediaTracking() {
   // Track video interactions
   document.querySelectorAll('video').forEach(video => {
     video.addEventListener('play', () => {
-      if (analytics) {
-        analytics.trackEvent('video_play', 'media', 'play', video.id || 'unknown', 1, {
-          videoId: video.id,
-          videoSrc: video.src,
-          videoDuration: video.duration
-        });
-      }
     });
 
     video.addEventListener('pause', () => {
-      if (analytics) {
-        analytics.trackEvent('video_pause', 'media', 'pause', video.id || 'unknown', 1, {
-          videoId: video.id,
-          currentTime: video.currentTime,
-          duration: video.duration
-        });
-      }
     });
   });
 
   // Track image interactions
   document.addEventListener('click', (e) => {
     if (e.target.tagName === 'IMG') {
-      if (analytics) {
-        analytics.trackEvent('image_click', 'engagement', 'click', e.target.alt || 'unknown', null, {
-          imageSrc: e.target.src,
-          imageAlt: e.target.alt,
-          imageWidth: e.target.naturalWidth,
-          imageHeight: e.target.naturalHeight
-        });
-      }
     }
   });
 }
