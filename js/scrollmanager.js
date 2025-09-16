@@ -33,6 +33,16 @@ export class ScrollManager {
           const sectionId = entry.target.id;
           const sectionName = entry.target.querySelector('h1, h2, h3')?.textContent || sectionId;
           
+          // Track section view
+          if (window.uamAnalytics) {
+            window.uamAnalytics.trackEvent('section_view', 'engagement', 'view', sectionName, null, {
+              sectionId: sectionId,
+              sectionName: sectionName,
+              viewportHeight: window.innerHeight,
+              scrollPosition: window.pageYOffset,
+              timestamp: Date.now()
+            });
+          }
           
           // Track with app state
           if (window.uamAppState) {

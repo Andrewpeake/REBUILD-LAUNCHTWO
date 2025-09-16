@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UAM UCalgary - Analytics Integration Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+        }
+        .step {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+        }
+        .warning {
+            background: rgba(255, 193, 7, 0.2);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+        }
+        .success {
+            background: rgba(76, 175, 80, 0.2);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+        }
+        .button {
+            background: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .button:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 UAM UCalgary Analytics Integration</h1>
+        <p>This page shows you exactly how to integrate analytics tracking into your live UAM UCalgary website.</p>
+
+        <div class="success">
+            <h3>✅ Analytics Script Ready</h3>
+            <p>Your analytics script is available at: <code>http://10.0.0.124:3001/uam-analytics.js</code></p>
+        </div>
+
+        <h2>📋 Integration Steps</h2>
+
+        <div class="step">
+            <h3>Step 1: Add Analytics Script to Your Website</h3>
+            <p>Add this single line to the <code>&lt;head&gt;</code> section of your UAM website:</p>
+            <div class="code-block">
+&lt;!-- UAM Analytics Tracking --&gt;
+&lt;script src="http://10.0.0.124:3001/uam-analytics.js"&gt;&lt;/script&gt;
+            </div>
+        </div>
+
+        <div class="step">
+            <h3>Step 2: For Production (when you deploy live)</h3>
+            <p>When you deploy your website live, update the script URL to your production analytics server:</p>
+            <div class="code-block">
+&lt;!-- UAM Analytics Tracking (Production) --&gt;
+&lt;script src="https://your-analytics-server.com/uam-analytics.js"&gt;&lt;/script&gt;
+            </div>
+        </div>
+
+        <div class="step">
+            <h3>Step 3: Test the Integration</h3>
+            <p>This page is already using the analytics script. Check the dashboard to see the data:</p>
+            <a href="http://10.0.0.124:3001/dashboard" target="_blank" class="button">Open Analytics Dashboard</a>
+        </div>
+
+        <h2>🎯 What Gets Tracked Automatically</h2>
+        <ul>
+            <li>✅ <strong>Page Views</strong> - Every page visit</li>
+            <li>✅ <strong>Device Info</strong> - Mobile, desktop, browser, OS</li>
+            <li>✅ <strong>Click Tracking</strong> - All button and link clicks</li>
+            <li>✅ <strong>Scroll Depth</strong> - How far users scroll</li>
+            <li>✅ <strong>Navigation</strong> - User journey through your site</li>
+            <li>✅ <strong>Performance</strong> - Page load times and Core Web Vitals</li>
+            <li>✅ <strong>UAM-Specific</strong> - AAM interactions, focus layers, team clicks</li>
+            <li>✅ <strong>Forms</strong> - Form submissions and field interactions</li>
+            <li>✅ <strong>Errors</strong> - JavaScript errors and issues</li>
+        </ul>
+
+        <h2>🔧 Advanced Configuration (Optional)</h2>
+        <p>If you want to customize the analytics, you can configure it after the script loads:</p>
+        <div class="code-block">
+&lt;script src="http://10.0.0.124:3001/uam-analytics.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+    // Optional: Configure analytics after it loads
+    window.addEventListener('load', function() {
+        if (window.UAMAnalytics) {
+            // Disable analytics for certain users (optional)
+            // window.UAMAnalytics.disable();
+            
+            // Track custom events
+            window.UAMAnalytics.trackEvent('custom_event', 'engagement', 'custom', 'test');
+        }
+    });
+&lt;/script&gt;
+        </div>
+
+        <div class="warning">
+            <h3>⚠️ Important Notes</h3>
+            <ul>
+                <li><strong>Privacy Compliant:</strong> No personal data is collected</li>
+                <li><strong>GDPR Ready:</strong> Includes consent tracking</li>
+                <li><strong>Performance Optimized:</strong> Minimal impact on page load</li>
+                <li><strong>Mobile Friendly:</strong> Works on all devices</li>
+            </ul>
+        </div>
+
+        <h2>📊 Dashboard Access</h2>
+        <p>View your analytics data in real-time:</p>
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="http://10.0.0.124:3001/dashboard" target="_blank" class="button" style="font-size: 18px; padding: 20px 40px;">
+                📈 Open Analytics Dashboard
+            </a>
+        </div>
+
+        <h2>🧪 Test the Analytics</h2>
+        <p>Interact with these elements to see data in the dashboard:</p>
+        
+        <div style="margin: 20px 0;">
+            <button class="button" onclick="testUAMInteraction('test_button')">Test Button Click</button>
+            <button class="button" onclick="testUAMInteraction('cta_button')">Test CTA Button</button>
+            <a href="#test" class="button" onclick="testUAMInteraction('test_link')">Test Link Click</a>
+        </div>
+
+        <div style="margin: 20px 0;">
+            <form onsubmit="testUAMForm(event)">
+                <input type="text" placeholder="Your Name" name="name" style="padding: 10px; margin: 5px; border: none; border-radius: 5px;">
+                <input type="email" placeholder="Your Email" name="email" style="padding: 10px; margin: 5px; border: none; border-radius: 5px;">
+                <button type="submit" class="button">Test Form Submit</button>
+            </form>
+        </div>
+
+        <div style="height: 300px; background: rgba(255,255,255,0.1); margin: 20px 0; padding: 20px; border-radius: 8px;">
+            <h4>Scroll Test Area</h4>
+            <p>Scroll down this area to test scroll depth tracking. The analytics will track how far you scroll and show it in the dashboard.</p>
+            <div style="height: 200px; background: rgba(255,255,255,0.05); margin: 20px 0; padding: 20px; border-radius: 8px;">
+                <p>More content to scroll through...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- UAM Analytics Script -->
+    <script src="http://10.0.0.124:3001/uam-analytics.js"></script>
+    
+    <script>
+        // Test functions
+        function testUAMInteraction(type) {
+            if (window.UAMAnalytics) {
+                window.UAMAnalytics.trackEvent('test_interaction', 'testing', 'click', type);
+                alert(`${type} tracked! Check the analytics dashboard.`);
+            } else {
+                alert('Analytics not loaded yet. Please wait a moment and try again.');
+            }
+        }
+
+        function testUAMForm(event) {
+            event.preventDefault();
+            if (window.UAMAnalytics) {
+                const formData = new FormData(event.target);
+                const data = Object.fromEntries(formData);
+                window.UAMAnalytics.trackEvent('test_form_submit', 'testing', 'submit', 'test_form', 1, data);
+                alert('Form submission tracked! Check the analytics dashboard.');
+            } else {
+                alert('Analytics not loaded yet. Please wait a moment and try again.');
+            }
+        }
+
+        // Show analytics status
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                if (window.UAMAnalytics) {
+                    console.log('✅ UAM Analytics loaded successfully');
+                    console.log('Session ID:', window.UAMAnalytics.sessionId);
+                } else {
+                    console.log('❌ UAM Analytics failed to load');
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UAM Advanced Analytics Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: transform 0.3s ease;
+        }
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+        .chart-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar {
+            background: linear-gradient(180deg, #1e3a8a 0%, #1e40af 100%);
+        }
+        .nav-item {
+            transition: all 0.3s ease;
+        }
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.2);
+            border-right: 3px solid #60a5fa;
+        }
+        .heatmap-container {
+            position: relative;
+            background: #f8f9fa;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .heatmap-point {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+        .heatmap-point:hover {
+            opacity: 1;
+            transform: scale(1.2);
+        }
+        .funnel-step {
+            background: linear-gradient(90deg, #e3f2fd 0%, #bbdefb 100%);
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .conversion-goal {
+            background: linear-gradient(90deg, #e8f5e8 0%, #c8e6c9 100%);
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .security-alert {
+            background: linear-gradient(90deg, #ffebee 0%, #ffcdd2 100%);
+            border-left: 4px solid #f44336;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .ai-insight {
+            background: linear-gradient(90deg, #f3e5f5 0%, #e1bee7 100%);
+            border-left: 4px solid #9c27b0;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 0 8px 8px 0;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="sidebar w-64 text-white p-6">
+            <div class="mb-8">
+                <h1 class="text-2xl font-bold">UAM Advanced Analytics</h1>
+                <p class="text-blue-200 text-sm">University of Calgary</p>
+            </div>
+            
+            <nav class="space-y-2">
+                <a href="#" class="nav-item active flex items-center p-3 rounded-lg" data-section="overview">
+                    <i class="fas fa-chart-line mr-3"></i>
+                    Overview
+                </a>
+                <a href="#" class="nav-item flex items-center p-3 rounded-lg" data-section="traffic">
+                    <i class="fas fa-users mr-3"></i>
+                    Traffic & Engagement
+                </a>
+                <a href="#" class="nav-item flex items-center p-3 rounded-lg" data-section="audience">
+                    <i class="fas fa-globe mr-3"></i>
+                    Audience Insights
+                </a>
+                <a href="#" class="nav-item flex items-center p-3 rounded-lg" data-section="performance">
+                    <i class="fas fa-tachometer-alt mr-3"></i>
+                    Performance
+                </a>
+                <a href="#" class="nav-item flex items-center p-3 rounded-lg" data-section="conversions">
+                    <i class="fas fa-bullseye mr-3"></i>
+                    Conversions
+                </a>
+                <a href="#" class="nav-item flex items-center p-3 rounded-lg" data-section="behavior">
+                    <i class="fas fa-mouse-pointer mr-3"></i>
+                    User Behavior
+                </a>
+                <a href="#" class="nav-item flex items-center p-3 rounded-lg" data-section="content">
+                    <i class="fas fa-file-alt mr-3"></i>
+                    Content Analytics
+                </a>
+                <a href="#" class="nav-item flex items-center p-3 rounded-lg" data-section="marketing">
+                    <i class="fas fa-bullhorn mr-3"></i>
+                    Marketing
+                </a>
+                <a href="#" class="nav-item flex items-center p-3 rounded-lg" data-section="security">
+                    <i class="fas fa-shield-alt mr-3"></i>
+                    Security
+                </a>
+                <a href="#" class="nav-item flex items-center p-3 rounded-lg" data-section="advanced">
+                    <i class="fas fa-brain mr-3"></i>
+                    AI Insights
+                </a>
+            </nav>
+
+            <div class="mt-8">
+                <label class="block text-sm font-medium mb-2">Time Period</label>
+                <select id="timePeriod" class="w-full p-2 rounded bg-blue-800 text-white border border-blue-600">
+                    <option value="1d">Last 24 Hours</option>
+                    <option value="7d" selected>Last 7 Days</option>
+                    <option value="30d">Last 30 Days</option>
+                    <option value="90d">Last 90 Days</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 overflow-y-auto">
+            <div class="p-8">
+                <!-- Header -->
+                <div class="mb-8">
+                    <h2 id="sectionTitle" class="text-3xl font-bold text-gray-800">Overview</h2>
+                    <p class="text-gray-600">Comprehensive analytics for your website</p>
+                </div>
+
+                <!-- Overview Section -->
+                <div id="overview-section" class="section">
+                    <!-- Key Metrics -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <div class="metric-card text-white p-6 rounded-lg">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-blue-200">Total Visitors</p>
+                                    <p id="totalVisitors" class="text-3xl font-bold">-</p>
+                                </div>
+                                <i class="fas fa-users text-4xl opacity-50"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="metric-card text-white p-6 rounded-lg">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-blue-200">Page Views</p>
+                                    <p id="totalPageViews" class="text-3xl font-bold">-</p>
+                                </div>
+                                <i class="fas fa-eye text-4xl opacity-50"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="metric-card text-white p-6 rounded-lg">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-blue-200">Bounce Rate</p>
+                                    <p id="bounceRate" class="text-3xl font-bold">-%</p>
+                                </div>
+                                <i class="fas fa-chart-line text-4xl opacity-50"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="metric-card text-white p-6 rounded-lg">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-blue-200">Avg. Session</p>
+                                    <p id="avgSession" class="text-3xl font-bold">-s</p>
+                                </div>
+                                <i class="fas fa-clock text-4xl opacity-50"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Real-time Activity -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                        <div class="chart-container">
+                            <h3 class="text-xl font-semibold mb-4">Real-time Activity</h3>
+                            <canvas id="realtimeChart"></canvas>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <h3 class="text-xl font-semibold mb-4">Top Pages</h3>
+                            <canvas id="topPagesChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Device & Browser Breakdown -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div class="chart-container">
+                            <h3 class="text-xl font-semibold mb-4">Device Types</h3>
+                            <canvas id="deviceChart"></canvas>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <h3 class="text-xl font-semibold mb-4">Browser Breakdown</h3>
+                            <canvas id="browserChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Traffic & Engagement Section -->
+                <div id="traffic-section" class="section hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div class="chart-container">
+                            <h3 class="text-xl font-semibold mb-4">Traffic Sources</h3>
+                            <canvas id="trafficSourcesChart"></canvas>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <h3 class="text-xl font-semibold mb-4">Click-Through Rates</h3>
+                            <div id="ctrTable" class="overflow-x-auto">
+                                <table class="min-w-full table-auto">
+                                    <thead>
+                                        <tr class="bg-gray-50">
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Element</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Clicks</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">CTR</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="ctrTableBody">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-container mt-8">
+                        <h3 class="text-xl font-semibold mb-4">Scroll Depth Analysis</h3>
+                        <canvas id="scrollDepthChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Audience Insights Section -->
+                <div id="audience-section" class="section hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div class="chart-container">
+                            <h3 class="text-xl font-semibold mb-4">Geographic Distribution</h3>
+                            <canvas id="geographicChart"></canvas>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <h3 class="text-xl font-semibold mb-4">New vs Returning Visitors</h3>
+                            <canvas id="visitorTypeChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-container mt-8">
+                        <h3 class="text-xl font-semibold mb-4">Screen Resolution Distribution</h3>
+                        <canvas id="screenResolutionChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Performance Section -->
+                <div id="performance-section" class="section hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="chart-container">
+                            <h3 class="text-xl font-semibold mb-4">Load Time</h3>
+                            <p id="avgLoadTime" class="text-3xl font-bold text-blue-600">-ms</p>
+                        </div>
+                        <div class="chart-container">
+                            <h3 class="text-xl font-semibold mb-4">First Contentful Paint</h3>
+                            <p id="avgFCP" class="text-3xl font-bold text-green-600">-ms</p>
+                        </div>
+                        <div class="chart-container">
+                            <h3 class="text-xl font-semibold mb-4">Largest Contentful Paint</h3>
+                            <p id="avgLCP" class="text-3xl font-bold text-yellow-600">-ms</p>
+                        </div>
+                    </div>
+
+                    <div class="chart-container mt-8">
+                        <h3 class="text-xl font-semibold mb-4">Core Web Vitals Trend</h3>
+                        <canvas id="webVitalsChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Conversions Section -->
+                <div id="conversions-section" class="section hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div class="chart-container">
+                            <h3 class="text-xl font-semibold mb-4">Conversion Funnel</h3>
+                            <div id="conversionFunnel">
+                                <!-- Funnel steps will be populated here -->
+                            </div>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <h3 class="text-xl font-semibold mb-4">Conversion Goals</h3>
+                            <div id="conversionGoals">
+                                <!-- Conversion goals will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Behavior Section -->
+                <div id="behavior-section" class="section hidden">
+                    <div class="chart-container">
+                        <h3 class="text-xl font-semibold mb-4">Click Heatmap</h3>
+                        <div class="heatmap-container" id="heatmapContainer">
+                            <!-- Heatmap will be rendered here -->
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+                        <div class="chart-container">
+                            <h3 class="text-xl font-semibold mb-4">Form Analytics</h3>
+                            <div id="formAnalytics">
+                                <!-- Form analytics will be populated here -->
+                            </div>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <h3 class="text-xl font-semibold mb-4">User Journey</h3>
+                            <canvas id="userJourneyChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Analytics Section -->
+                <div id="content-section" class="section hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div class="chart-container">
+                            <h3 class="text-xl font-semibold mb-4">Content Performance</h3>
+                            <canvas id="contentPerformanceChart"></canvas>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <h3 class="text-xl font-semibold mb-4">Exit Intent Analysis</h3>
+                            <div id="exitIntentAnalysis">
+                                <!-- Exit intent data will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-container mt-8">
+                        <h3 class="text-xl font-semibold mb-4">Media Engagement</h3>
+                        <canvas id="mediaEngagementChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Marketing Section -->
+                <div id="marketing-section" class="section hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div class="chart-container">
+                            <h3 class="text-xl font-semibold mb-4">UTM Campaign Performance</h3>
+                            <canvas id="utmCampaignChart"></canvas>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <h3 class="text-xl font-semibold mb-4">Search Keywords</h3>
+                            <div id="searchKeywords">
+                                <!-- Search keywords will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Section -->
+                <div id="security-section" class="section hidden">
+                    <div class="chart-container">
+                        <h3 class="text-xl font-semibold mb-4">Security Events</h3>
+                        <div id="securityEvents">
+                            <!-- Security events will be populated here -->
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+                        <div class="chart-container">
+                            <h3 class="text-xl font-semibold mb-4">Bot Detection</h3>
+                            <canvas id="botDetectionChart"></canvas>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <h3 class="text-xl font-semibold mb-4">Consent Tracking</h3>
+                            <canvas id="consentChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Insights Section -->
+                <div id="advanced-section" class="section hidden">
+                    <div class="chart-container">
+                        <h3 class="text-xl font-semibold mb-4">AI Insights & Recommendations</h3>
+                        <div id="aiInsights">
+                            <!-- AI insights will be populated here -->
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+                        <div class="chart-container">
+                            <h3 class="text-xl font-semibold mb-4">User Segmentation</h3>
+                            <canvas id="userSegmentationChart"></canvas>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <h3 class="text-xl font-semibold mb-4">Churn Prediction</h3>
+                            <canvas id="churnPredictionChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-container mt-8">
+                        <h3 class="text-xl font-semibold mb-4">Feature Usage Analytics</h3>
+                        <canvas id="featureUsageChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.min.js"></script>
+    <script src="assets/enhanced-dashboard.js"></script>
+</body>
+</html>

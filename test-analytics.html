@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UAM Analytics Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        .button {
+            background: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 16px;
+        }
+        .button:hover {
+            background: #45a049;
+        }
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+        .form {
+            margin: 20px 0;
+        }
+        .form input, .form textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: none;
+            border-radius: 5px;
+        }
+        .video {
+            width: 100%;
+            height: 200px;
+            background: #333;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 UAM Analytics Test Page</h1>
+        <p>This page is designed to test all analytics features. Open this on your phone and interact with the elements below to see data appear in the analytics dashboard.</p>
+        
+        <div class="status" id="status">
+            <h3>📊 Analytics Status</h3>
+            <p>Session ID: <span id="sessionId">Loading...</span></p>
+            <p>Analytics Endpoint: <span id="endpoint">Loading...</span></p>
+            <p>Connection Status: <span id="connection">Testing...</span></p>
+        </div>
+
+        <h2>🎯 Test Interactions</h2>
+        
+        <div>
+            <h3>Button Clicks (CTR Testing)</h3>
+            <button class="button" onclick="testButtonClick('primary-cta')">Primary CTA Button</button>
+            <button class="button" onclick="testButtonClick('secondary-cta')">Secondary CTA Button</button>
+            <button class="button" onclick="testButtonClick('learn-more')">Learn More Button</button>
+        </div>
+
+        <div>
+            <h3>Link Clicks (Navigation Testing)</h3>
+            <a href="#section1" class="button" onclick="testLinkClick('internal-link')">Internal Link</a>
+            <a href="https://www.google.com" class="button" onclick="testLinkClick('external-link')">External Link</a>
+        </div>
+
+        <div class="form">
+            <h3>Form Analytics Testing</h3>
+            <form id="testForm" onsubmit="testFormSubmit(event)">
+                <input type="text" placeholder="Your Name" name="name" required>
+                <input type="email" placeholder="Your Email" name="email" required>
+                <textarea placeholder="Your Message" name="message" rows="4"></textarea>
+                <button type="submit" class="button">Submit Form</button>
+            </form>
+        </div>
+
+        <div>
+            <h3>Media Engagement Testing</h3>
+            <div class="video" onclick="testVideoEngagement()">
+                <p>🎥 Click to simulate video play</p>
+            </div>
+        </div>
+
+        <div>
+            <h3>Scroll Depth Testing</h3>
+            <p>Scroll down this page to test scroll depth tracking...</p>
+            <div style="height: 200px; background: rgba(255,255,255,0.1); margin: 20px 0; padding: 20px; border-radius: 8px;">
+                <h4>Section 1</h4>
+                <p>This is a test section to measure scroll depth. Keep scrolling to see more sections.</p>
+            </div>
+            <div style="height: 200px; background: rgba(255,255,255,0.1); margin: 20px 0; padding: 20px; border-radius: 8px;">
+                <h4>Section 2</h4>
+                <p>Another section for scroll testing. The analytics will track how far users scroll.</p>
+            </div>
+            <div style="height: 200px; background: rgba(255,255,255,0.1); margin: 20px 0; padding: 20px; border-radius: 8px;">
+                <h4>Section 3</h4>
+                <p>Final section for scroll depth testing. This helps measure user engagement.</p>
+            </div>
+        </div>
+
+        <div>
+            <h3>Search Testing</h3>
+            <input type="search" placeholder="Search for something..." id="searchInput" onchange="testSearch()">
+        </div>
+
+        <div style="margin-top: 40px; text-align: center;">
+            <h3>📱 Dashboard Access</h3>
+            <p>Open the analytics dashboard to see your interactions:</p>
+            <a href="http://10.0.0.124:3001/dashboard" target="_blank" class="button" style="display: inline-block; text-decoration: none;">
+                Open Analytics Dashboard
+            </a>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import analytics modules
+        import { Analytics } from './js/analytics.js';
+        import { AdvancedAnalytics } from './js/advanced-analytics.js';
+
+        // Initialize analytics
+        window.analytics = new Analytics();
+        window.advancedAnalytics = new AdvancedAnalytics();
+
+        // Update status display
+        document.getElementById('sessionId').textContent = window.analytics.sessionId;
+        document.getElementById('endpoint').textContent = window.analytics.analyticsEndpoint;
+        
+        // Test connection
+        fetch('http://10.0.0.124:3001/health')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('connection').textContent = '✅ Connected';
+                document.getElementById('connection').style.color = '#4CAF50';
+            })
+            .catch(error => {
+                document.getElementById('connection').textContent = '❌ Failed to connect';
+                document.getElementById('connection').style.color = '#f44336';
+            });
+
+        // Test functions
+        window.testButtonClick = function(buttonId) {
+            console.log('Testing button click:', buttonId);
+            window.analytics.trackButtonClick(buttonId, buttonId);
+            window.advancedAnalytics.trackEvent('button_click', 'engagement', 'click', buttonId);
+            alert(`Button "${buttonId}" clicked! Check the analytics dashboard.`);
+        };
+
+        window.testLinkClick = function(linkType) {
+            console.log('Testing link click:', linkType);
+            window.analytics.trackLinkClick(window.location.href, linkType);
+            window.advancedAnalytics.trackEvent('link_click', 'navigation', 'click', linkType);
+            alert(`Link "${linkType}" clicked! Check the analytics dashboard.`);
+        };
+
+        window.testFormSubmit = function(event) {
+            event.preventDefault();
+            console.log('Testing form submission');
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData);
+            
+            window.analytics.trackFormSubmit('testForm', data);
+            window.advancedAnalytics.trackEvent('form_submit', 'engagement', 'submit', 'testForm', 1, data);
+            
+            alert('Form submitted! Check the analytics dashboard.');
+        };
+
+        window.testVideoEngagement = function() {
+            console.log('Testing video engagement');
+            window.advancedAnalytics.trackEvent('video_play', 'media', 'play', 'test_video', 1);
+            alert('Video engagement tracked! Check the analytics dashboard.');
+        };
+
+        window.testSearch = function() {
+            const query = document.getElementById('searchInput').value;
+            if (query) {
+                console.log('Testing search:', query);
+                window.advancedAnalytics.trackEvent('search', 'engagement', 'search', query);
+                alert(`Search for "${query}" tracked! Check the analytics dashboard.`);
+            }
+        };
+
+        // Track page view
+        window.analytics.trackPageView();
+        window.advancedAnalytics.trackPageView();
+
+        console.log('Analytics test page loaded successfully!');
+    </script>
+</body>
+</html>
