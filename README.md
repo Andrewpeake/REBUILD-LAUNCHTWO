@@ -90,4 +90,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 - GSAP for animation library
 - Inter & Orbitron fonts from Google Fonts
-- University of Calgary Urban Air Mobility Team 
+- University of Calgary Urban Air Mobility Team # UAM UCalgary Website - Updated Thu Sep 18 00:37:36 MDT 2025
