@@ -25,5 +25,6 @@ export class HomeSection extends BaseSection {
     // e.g. CTA button behavior, entrance animation, etc.
     
     // Track home section specific interactions
-
+    
+  }
 }
