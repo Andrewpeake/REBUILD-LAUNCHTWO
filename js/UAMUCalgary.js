@@ -183,9 +183,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             itemId: item.id || 'unknown'
           });
 
-          // Track analytics event
-            itemId: item.id || 'unknown'
-          });
 
           document.querySelectorAll('.aam-details').forEach(detail => {
             detail.style.maxHeight = '0px';
@@ -234,7 +231,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       error: error.message
     });
 
-    // Track critical error in analytics
     
     // Show error message to user
     const errorOverlay = document.createElement('div');
