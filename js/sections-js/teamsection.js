@@ -34,8 +34,6 @@ export class MeettheTeamSection extends BaseSection {
         const memberName = member.querySelector('.member-name, .name, h3, h4')?.textContent || 'Unknown';
         const memberRole = member.querySelector('.member-role, .role, .position')?.textContent || 'Unknown';
         
-        if (window.uamAnalytics) {
-          window.uamAnalytics.trackEvent('team_member_click', 'engagement', 'click', memberName, null, {
             memberName: memberName,
             memberRole: memberRole,
             section: 'team',
@@ -51,8 +49,6 @@ export class MeettheTeamSection extends BaseSection {
       link.addEventListener('click', () => {
         const memberName = link.textContent.trim() || link.closest('.team-member')?.querySelector('.member-name, .name')?.textContent || 'Unknown';
         
-        if (window.uamAnalytics) {
-          window.uamAnalytics.trackEvent('team_bio_click', 'engagement', 'click', memberName, null, {
             memberName: memberName,
             bioUrl: link.href,
             section: 'team'
@@ -69,8 +65,6 @@ export class MeettheTeamSection extends BaseSection {
           const scrollDepth = (entry.intersectionRatio * 100);
           if (scrollDepth > maxScrollDepth) {
             maxScrollDepth = scrollDepth;
-            if (window.uamAnalytics) {
-              window.uamAnalytics.trackEvent('team_section_scroll', 'engagement', 'scroll', `${Math.round(scrollDepth)}%`, scrollDepth, {
                 section: 'team',
                 scrollDepth: scrollDepth
               });

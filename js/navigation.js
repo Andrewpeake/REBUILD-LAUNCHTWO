@@ -79,15 +79,6 @@ export function initNavigation() {
       if (targetElement) {
         targetElement.scrollIntoView({ behavior: 'smooth' });
         
-        // Track navigation click
-        if (window.uamAnalytics) {
-          window.uamAnalytics.trackEvent('navigation_click', 'navigation', 'click', targetId, null, {
-            linkText: e.target.textContent,
-            targetSection: targetId.replace('#', ''),
-            scrollPosition: window.pageYOffset,
-            timestamp: Date.now()
-          });
-        }
         
         // Track with app state
         if (window.uamAppState) {
