@@ -25,31 +25,5 @@ export class HomeSection extends BaseSection {
     // e.g. CTA button behavior, entrance animation, etc.
     
     // Track home section specific interactions
-    this.setupHomeAnalytics();
-  }
 
-  setupHomeAnalytics() {
-    // Track hero CTA clicks
-    const heroCTAs = this.el.querySelectorAll('.hero-cta, .cta-button, .main-cta');
-    heroCTAs.forEach(cta => {
-      cta.addEventListener('click', () => {
-            buttonText: cta.textContent.trim(),
-            buttonClass: cta.className,
-            section: 'home'
-          });
-        }
-      });
-    });
-
-    // Track scroll to next section
-    const scrollIndicators = this.el.querySelectorAll('.scroll-indicator, .scroll-down, .next-section');
-    scrollIndicators.forEach(indicator => {
-      indicator.addEventListener('click', () => {
-            section: 'home',
-            indicatorType: indicator.className
-          });
-        }
-      });
-    });
-  }
 }
