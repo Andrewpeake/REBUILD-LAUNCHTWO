@@ -26,7 +26,6 @@ const sectionIds = [
   'about',
   'focus',
   'team',
-  'how-it-works',
   'join',
   'partnerships',
   'contact'
