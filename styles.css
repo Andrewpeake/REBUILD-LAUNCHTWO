@@ -2719,6 +2719,10 @@ body.site-loaded #site-footer {
     padding: 4rem 1rem;
   }
   
+  .executives-section::before {
+    display: none; /* Remove background animation on mobile */
+  }
+  
   .executives-title {
     font-size: 2.5rem;
   }
