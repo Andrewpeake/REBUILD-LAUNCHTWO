@@ -27,6 +27,7 @@ const sectionIds = [
   'focus',
   'team',
   'join',
+  'executives',
   'partnerships',
   'contact'
 ];

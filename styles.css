@@ -2516,3 +2516,225 @@ body.site-loaded #site-footer {
     width: 100%; /* Ensure labels take full width */
   }
 }
+
+/* === EXECUTIVES SECTION === */
+.executives-section {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 6rem 2rem;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.executives-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+  opacity: 0.3;
+}
+
+.executives-container {
+  max-width: 1200px;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+.executives-content {
+  text-align: center;
+}
+
+.executives-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.executives-subtitle {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+  font-weight: 300;
+}
+
+.executives-description {
+  font-size: 1.1rem;
+  margin-bottom: 3rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.7;
+  opacity: 0.95;
+}
+
+.executives-positions {
+  margin-bottom: 3rem;
+}
+
+.executives-positions h3 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+.positions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.position-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: left;
+  transition: all 0.3s ease;
+}
+
+.position-card:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.position-card h4 {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  color: white;
+  font-weight: 600;
+}
+
+.position-card p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.executives-cta {
+  text-align: center;
+}
+
+.executive-apply-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+  color: white;
+  padding: 1.25rem 2.5rem;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.executive-apply-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.executive-apply-button:hover::before {
+  left: 100%;
+}
+
+.executive-apply-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(255, 107, 107, 0.6);
+  background: linear-gradient(45deg, #ff5252, #ff7979);
+}
+
+.button-text {
+  position: relative;
+  z-index: 2;
+}
+
+.button-icon {
+  position: relative;
+  z-index: 2;
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.executive-apply-button:hover .button-icon {
+  transform: translateX(5px);
+}
+
+.executives-note {
+  margin-top: 1.5rem;
+  font-size: 0.95rem;
+  opacity: 0.8;
+  font-style: italic;
+}
+
+/* Navigation styles for executive link */
+.nav-executive {
+  background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+  color: white !important;
+  padding: 0.75rem 1.5rem;
+  border-radius: 25px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.nav-executive:hover {
+  background: linear-gradient(45deg, #ff5252, #ff7979);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+}
+
+/* Mobile responsiveness for executives section */
+@media (max-width: 768px) {
+  .executives-section {
+    padding: 4rem 1rem;
+  }
+  
+  .executives-title {
+    font-size: 2.5rem;
+  }
+  
+  .executives-subtitle {
+    font-size: 1.2rem;
+  }
+  
+  .positions-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .position-card {
+    padding: 1.25rem;
+  }
+  
+  .executive-apply-button {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+  }
+  
+  .nav-executive {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+}
