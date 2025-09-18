@@ -2562,8 +2562,9 @@ body.site-loaded #site-footer {
 .executives-subtitle {
   font-size: 1.5rem;
   margin-bottom: 2rem;
-  opacity: 0.9;
-  font-weight: 300;
+  opacity: 1;
+  font-weight: 400;
+  color: #ffffff;
 }
 
 .executives-description {
@@ -2573,7 +2574,9 @@ body.site-loaded #site-footer {
   margin-left: auto;
   margin-right: auto;
   line-height: 1.7;
-  opacity: 0.95;
+  opacity: 1;
+  color: #ffffff;
+  font-weight: 400;
 }
 
 .executives-positions {
@@ -2584,6 +2587,8 @@ body.site-loaded #site-footer {
   font-size: 2rem;
   margin-bottom: 2rem;
   font-weight: 600;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .positions-grid {
@@ -2617,9 +2622,10 @@ body.site-loaded #site-footer {
 }
 
 .position-card p {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.95);
   font-size: 0.95rem;
   line-height: 1.5;
+  font-weight: 400;
 }
 
 .executives-cta {
@@ -2630,7 +2636,7 @@ body.site-loaded #site-footer {
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
-  background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+  background: linear-gradient(45deg, #4a90e2, #357abd);
   color: white;
   padding: 1.25rem 2.5rem;
   border-radius: 50px;
@@ -2638,7 +2644,7 @@ body.site-loaded #site-footer {
   font-weight: 600;
   font-size: 1.1rem;
   transition: all 0.3s ease;
-  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+  box-shadow: 0 8px 25px rgba(74, 144, 226, 0.4);
   border: 2px solid transparent;
   position: relative;
   overflow: hidden;
@@ -2661,8 +2667,8 @@ body.site-loaded #site-footer {
 
 .executive-apply-button:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 35px rgba(255, 107, 107, 0.6);
-  background: linear-gradient(45deg, #ff5252, #ff7979);
+  box-shadow: 0 12px 35px rgba(74, 144, 226, 0.6);
+  background: linear-gradient(45deg, #357abd, #2c5aa0);
 }
 
 .button-text {
@@ -2684,25 +2690,27 @@ body.site-loaded #site-footer {
 .executives-note {
   margin-top: 1.5rem;
   font-size: 0.95rem;
-  opacity: 0.8;
+  opacity: 1;
   font-style: italic;
+  color: #ffffff;
+  font-weight: 400;
 }
 
 /* Navigation styles for executive link */
 .nav-executive {
-  background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+  background: linear-gradient(45deg, #4a90e2, #357abd);
   color: white !important;
   padding: 0.75rem 1.5rem;
   border-radius: 25px;
   font-weight: 600;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+  box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
 }
 
 .nav-executive:hover {
-  background: linear-gradient(45deg, #ff5252, #ff7979);
+  background: linear-gradient(45deg, #357abd, #2c5aa0);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+  box-shadow: 0 6px 20px rgba(74, 144, 226, 0.4);
 }
 
 /* Mobile responsiveness for executives section */
