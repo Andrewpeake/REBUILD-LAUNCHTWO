@@ -2609,44 +2609,23 @@ body.site-loaded #site-footer {
 }
 
 .executive-apply-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
+  display: inline-block;
   background: #0066cc;
-  color: white;
+  color: #fff;
   padding: 1rem 2.5rem;
   border-radius: 8px;
   text-decoration: none;
   font-weight: 600;
-  font-size: 1.1rem;
   transition: background 0.3s ease, transform 0.2s ease;
   box-shadow: 0 2px 8px rgba(0, 102, 204, 0.3);
-  border: none;
-  position: relative;
 }
 
 
 .executive-apply-button:hover {
   background: #0052a3;
   transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(0, 102, 204, 0.4);
 }
 
-.button-text {
-  position: relative;
-  z-index: 2;
-}
-
-.button-icon {
-  position: relative;
-  z-index: 2;
-  font-size: 1.2rem;
-  transition: transform 0.3s ease;
-}
-
-.executive-apply-button:hover .button-icon {
-  transform: translateX(5px);
-}
 
 .executives-note {
   margin-top: 1.5rem;
@@ -2659,7 +2638,7 @@ body.site-loaded #site-footer {
 /* Navigation styles for executive link */
 .nav-executive {
   background: #0066cc;
-  color: white !important;
+  color: #fff;
   padding: 0.6rem 1.2rem;
   border-radius: 8px;
   font-weight: 600;
