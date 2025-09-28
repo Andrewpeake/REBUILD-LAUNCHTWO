@@ -2647,11 +2647,15 @@ body.site-loaded #site-footer {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.nav-executive:hover {
+.nav-links .nav-executive:hover {
   background: #0052a3;
   color: #fff;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 102, 204, 0.4);
+}
+
+.nav-links .nav-executive::after {
+  display: none;
 }
 
 /* Mobile responsiveness for executives section */
