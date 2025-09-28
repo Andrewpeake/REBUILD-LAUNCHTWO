@@ -2636,7 +2636,7 @@ body.site-loaded #site-footer {
 }
 
 /* Navigation styles for executive link */
-.nav-executive {
+.nav-links .nav-executive {
   background: #0066cc;
   color: #fff;
   padding: 0.6rem 1.2rem;
@@ -2686,7 +2686,7 @@ body.site-loaded #site-footer {
     font-size: 1rem;
   }
   
-  .nav-executive {
+  .nav-links .nav-executive {
     padding: 0.6rem 1.2rem;
     font-size: 0.9rem;
   }
